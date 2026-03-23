@@ -17,7 +17,7 @@ paginate: true
 |--------|------|--------|
 | 🧠 1 | Teoría y Setup | 30 min |
 | 💻 2 | Hola Mundo en Consola | 45 min |
-| 📱 3 | Despliegue en Telegram | 45 min |
+| 📱 3 | Despliegue en Discord | 45 min |
 
 **Objetivo:** Pasar de cero a tener un agente conversacional en producción.
 
@@ -54,127 +54,133 @@ Un **Large Language Model** (LLM) es un modelo de lenguaje entrenado con grandes
 | Contexto | ❌ Prompt manual | ✅ MCP / RAG automático |
 | Orquestación | ❌ Un solo modelo | ✅ Multi-agente |
 
----
 
+---
 ## ¿Qué es OpenClaw?
 
-**OpenClaw** es un framework open source para construir agentes conversacionales que:
+---
+![bg left](img/openclaw/openclaw.png)
 
-- 🔌 Se conectan a **múltiples canales** (Telegram, web, terminal...)
+**OpenClaw** es un framework open source para construir agentes conversacionales que
+
+- 🔌 Se conecta a **múltiples canales** (Telegram, web, terminal...)
 - 🛠️ Ejecutan **Skills personalizadas** (APIs, bases de datos, scripts)
 - 🧠 Mantienen **memoria** de la conversación
 - 🤖 Admiten **múltiples modelos** (OpenAI, Anthropic, modelos locales)
-- 🔗 Son compatibles con el estándar **MCP** (Model Context Protocol)
+
+<!--
+**OpenClaw** es un framework open source para construir agentes conversacionales que
+
+Además, soporta MCP
+
+-->
 
 ---
 
-## Arquitectura básica de OpenClaw
 
-```
-┌─────────────────────────────────────┐
-│           Canal de entrada          │
-│   (Telegram / Terminal / Web...)    │
-└──────────────┬──────────────────────┘
-               │
-┌──────────────▼──────────────────────┐
-│           OpenClaw Core             │
-│  ┌──────────┐  ┌──────────────────┐ │
-│  │  Memory  │  │   System Prompt  │ │
-│  └──────────┘  └──────────────────┘ │
-│  ┌──────────┐  ┌──────────────────┐ │
-│  │  Skills  │  │   LLM Provider   │ │
-│  └──────────┘  └──────────────────┘ │
-└─────────────────────────────────────┘
-```
+![bg](img/architecture.jpg)
+
 
 ---
 
-## Instalación del entorno
+## Instalación
 
-Cambiar con virtualbox y docker...
+![alt text](img/openclaw/demo.png)
 
-**Requisitos previos:**
-- Python 3.10+ o Node.js 18+
-- pip / npm
-- Una clave API de OpenAI, Anthropic **o** un modelo local (Ollama)
+---
 
-```bash
-# Clonar el repositorio
-git clone https://github.com/tu-org/openclaw.git
-cd openclaw
+## Posibilidades de instalación
 
-# Instalar dependencias
-pip install -r requirements.txt
-# o
-npm install
-```
+| Opción | Seguridad | Facilidad | Coste | Mantenimiento | Escalabilidad |
+|---|---:|---:|---:|---:|---:|
+| **VPS** | ⭐⭐⭐⭐☆ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ | ⭐⭐⭐⭐⭐ |
+| **Local + Docker** | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐☆ | ⭐⭐⭐☆☆ | ⭐⭐⭐☆☆ |
+| **Local nativo** | ⭐⭐☆☆☆ | ⭐⭐⭐☆☆ | ⭐⭐⭐⭐⭐ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ |
+
+<!-- 
+**VPS**  
+Ventajas: Disponible 24/7, acceso remoto, ideal para demos/prod  
+Inconvenientes: Requiere administración de servidor y monitorización  
+
+**Local + Docker**  
+Ventajas: Setup reproducible, dependencias controladas, fácil de compartir  
+Inconvenientes: Consumo local de recursos, depende del equipo del alumno  
+
+**Local nativo**  
+Ventajas: Arranque rápido para pruebas simples, menos capas  
+Inconvenientes: "Funciona en mi máquina", conflictos de versiones y más mantenimiento  
+-->
+
+**Lectura rápida**
+- **VPS:** mejor para producción y acceso remoto 24/7
+- **Local + Docker:** mejor equilibrio para formación y demos controladas
+- **Local nativo:** útil para pruebas rápidas, menos recomendable para equipos
+
+---
+
+## Local + docker
+
+
+
+
 
 ---
 
 ## Variables de entorno
 
-Crear el fichero `.env` en la raíz del proyecto:
+Crear el fichero `.env` en la raíz del proyecto
 
-```bash
-# Proveedor de LLM (elegir uno)
-OPENAI_API_KEY=sk-...
-# ANTHROPIC_API_KEY=sk-ant-...
+**Importante: Debes establecer el TimeZone (OPENCLAW_TZ) adecuado para evitar problemas con la aplicación web**
 
-# Modelo a usar
-LLM_MODEL=gpt-4o-mini
-
-# (Opcional) Modelo local con Ollama
-# LLM_BASE_URL=http://localhost:11434
-# LLM_MODEL=llama3.2
-```
 
 > 💡 **Nunca subas el `.env` a Git.** Está en el `.gitignore` por defecto.
 
 ---
 
-## Verificar la instalación
-
-```bash
-# Comprobar que todo funciona
-python -c "import openclaw; print(openclaw.__version__)"
-
-# o con Node
-node -e "const oc = require('openclaw'); console.log(oc.version)"
-```
-
-Si ves la versión sin errores, ¡estás listo! ✅
+## Go live!
 
 ---
 
-# Bloque 2
-## 💻 Hola Mundo en Consola
+# Primeros pasos
 
-*Del "Hello World" al primer agente con personalidad*
+## Acceso básico
+
+* Arquitectura final (MI PC > Virtual Box > Docker > OpenClaw)
+* Acceso a los contenedores
+* Acceso a TUI (*Terminal User Interface*)
+
+---
+
+## TUI
+
+* Qué es? 
+* Primera conversación (definiendo SOUL.MD e IDENTITY.md)
+
+## Web
+
+* Cómo abro el panel?
+* Problema con el timezone del docker (está en UTC)
+
+## Estructura de archivos
+* Qué ficheros son relevantes? 
+  * openclaw.json
+  * workspace/
+
+## Contexto
+
+AGENTS.md  BOOTSTRAP.md  HEARTBEAT.md  IDENTITY.md  SOUL.md  TOOLS.md  USER.md
+
+## Primer canal  💻 Hola Mundo en Consola
+
+![alt text](img/openclaw/first_run.png)
 
 ---
 
 ## El archivo de configuración
 
-OpenClaw se configura con un fichero `agent.yaml` (o `agent.json`):
-
-```yaml
-# agent.yaml
-name: recepcionista
-description: Agente recepcionista de la empresa TechCorp
-
-llm:
-  provider: openai
-  model: gpt-4o-mini
-
-memory:
-  enabled: true
-  type: in-memory   # o: sqlite, redis...
-
-system_prompt: |
-  Eres el recepcionista virtual de TechCorp, una empresa de software.
-  Eres amable, profesional y conciso.
-  Si no sabes algo, dilo con honestidad y ofrece conectar con el equipo humano.
-```
+OpenClaw se configura con un fichero `agent.json`, pero también podemos editar la configuración mediante:
+* `openclaw configure`
+* Web
 
 ---
 
@@ -381,8 +387,12 @@ channels:
 
 ---
 
-## 🧪 Ejercicio 2 — Bot en Telegram
+## 🧪 Ejercicio 2 — Bot en Discord
 
+* Pairing
+
+
+cambiar para discord
 1. Crea tu bot en BotFather y obtén el token
 2. Actualiza tu `.env` con `TELEGRAM_BOT_TOKEN`
 3. Añade la sección `channels.telegram` a tu `agent.yaml`
@@ -390,6 +400,18 @@ channels:
 5. Comparte el username de tu bot con un compañero para que lo pruebe
 
 **Bonus:** Edita el System Prompt para que el bot se presente con tu nombre de empresa ficticia.
+
+---
+
+## Ejercicio 3 - La lista de la compra
+
+--- 
+
+## Ejercicio 4 - Resumen de documentos
+
+---
+
+## Ejercicio 5 - Cron jobs
 
 ---
 
