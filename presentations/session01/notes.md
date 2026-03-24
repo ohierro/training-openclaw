@@ -1,6 +1,8 @@
 
 # Session 01 notes
 
+
+
 ## Instalación de máquina virtual
 
 Olvidar...

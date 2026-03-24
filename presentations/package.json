@@ -4,8 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "build": "marp --input-dir . --output dist --html",
-    "build:watch": "marp --input-dir . --output dist --html --watch",
+    "copy:assets": "node scripts/copy-assets.mjs",
+    "build": "marp --input-dir . --output dist --html && npm run copy:assets",
+    "build:watch": "npm run copy:assets && marp --input-dir . --output dist --html --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
