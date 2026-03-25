@@ -1,0 +1,33 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "presentations: build watch",
+      "type": "shell",
+      "command": "npm run build:watch",
+      "options": {
+        "cwd": "${workspaceFolder}/presentations"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "presentations: preview server",
+      "type": "shell",
+      "command": "npm run preview",
+      "options": {
+        "cwd": "${workspaceFolder}/presentations"
+      },
+      "isBackground": true,
+      "problemMatcher": []
+    },
+    {
+      "label": "presentations: livepreview",
+      "dependsOn": [
+        "presentations: build watch",
+        "presentations: preview server"
+      ],
+      "dependsOrder": "parallel"
+    }
+  ]
+}

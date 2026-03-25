@@ -75,11 +75,46 @@ Un **Large Language Model** (LLM) es un modelo de lenguaje entrenado con grandes
 - 🤖 Admiten **múltiples modelos** (OpenAI, Anthropic, modelos locales)
 
 <!--
-**OpenClaw** es un framework open source para construir agentes conversacionales que
-
-Además, soporta MCP
-
+Además, soporta MCP, Hooks... etc
 -->
+
+---
+
+## Peter Steinberger — El Clawdfather
+
+📍 Viena ↔ Londres · [@steipete](https://x.com/steipete)
+
+- 🏢 **2011–2021:** Fundó **PSPDFKit**, el SDK de PDF líder para iOS/Android
+  — bootstrapped hasta millones en ARR, exit en 2021 ($116M ronda de financiación)
+- 📱 **13+ años** desarrollando apps nativas iOS: conocido por *Aspects* (AOP en Objective-C, 10k+ ⭐) e *InterposeKit*
+- 🔬 Contribuidor activo en la comunidad open source; ponente internacional sobre AI y desarrollo ágil
+- 🤖 **2024:** Volvió del retiro para **"mess with AI"** — y creó OpenClaw
+
+> *"Ship beats perfect"* — su filosofía de siempre
+
+---
+
+## De PSPDFKit a OpenClaw: el salto a los agentes
+
+Tras el exit de PSPDFKit, Peter exploró el ecosistema AI y detectó un hueco:
+
+> *"Todos los LLMs generan texto — nadie construía agentes que realmente actuasen"*
+
+---
+
+## De PSPDFKit a OpenClaw: el salto a los agentes
+
+- 🛠️ Empezó construyendo **herramientas para sí mismo**: CLIs, MCPs, automatizaciones
+  — más de 50 repos públicos en un año (*Peekaboo*, *VibeTunnel*, *Terminator MCP*...)
+- 🦞 Nació **OpenClaw**: el agente que *"actually does things"*
+  — identidad via Markdown, memoria persistente, skills, canales, multi-modelo
+- 🌍 Proyecto **open source** desde el primer día, con comunidad de sponsors activa
+- 📣 Divulga su workflow AI en [steipete.me](https://steipete.me) y conferencias internacionales
+
+> 💡 *El nombre «Clawdfather» en su GitHub lo dice todo.*
+
+
+
 
 ---
 
@@ -87,21 +122,27 @@ Además, soporta MCP
 ![bg](img/architecture.jpg)
 
 
----
+<!-- ---
 
 ## Instalación
 
-![alt text](img/openclaw/demo.png)
+![alt text](img/openclaw/demo.png) -->
 
 ---
 
 ## Posibilidades de instalación
 
-| Opción | Seguridad | Facilidad | Coste | Mantenimiento | Escalabilidad |
-|---|---:|---:|---:|---:|---:|
-| **VPS** | ⭐⭐⭐⭐☆ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ | ⭐⭐⭐⭐⭐ |
-| **Local + Docker** | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐☆ | ⭐⭐⭐☆☆ | ⭐⭐⭐☆☆ |
-| **Local nativo** | ⭐⭐☆☆☆ | ⭐⭐⭐☆☆ | ⭐⭐⭐⭐⭐ | ⭐⭐☆☆☆ | ⭐⭐☆☆☆ |
+| | **VPS** | **Local + Docker** | **Local nativo** |
+|---|:---:|:---:|:---:|
+| **Seguridad** | ⭐⭐⭐⭐☆ | ⭐⭐⭐⭐☆ | ⭐⭐☆☆☆ |
+| **Facilidad** | ⭐⭐☆☆☆ | ⭐⭐⭐☆☆ | ⭐⭐⭐⭐☆ |
+| **Coste** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆ | ⭐⭐⭐☆☆ |
+| **Mantenimiento** | ⭐⭐☆☆☆ | ⭐⭐⭐☆☆ | ⭐⭐☆☆☆ |
+| **Escalabilidad** | ⭐⭐⭐⭐⭐ | ⭐⭐⭐☆☆ | ⭐⭐☆☆☆ |
+
+---
+
+## Posibilidades de instalación
 
 <!-- 
 **VPS**  
@@ -121,6 +162,241 @@ Inconvenientes: "Funciona en mi máquina", conflictos de versiones y más manten
 - **VPS:** mejor para producción y acceso remoto 24/7
 - **Local + Docker:** mejor equilibrio para formación y demos controladas
 - **Local nativo:** útil para pruebas rápidas, menos recomendable para equipos
+
+---
+
+## Conceptos básicos
+* Modelos
+* Sesiones
+* Canales
+
+---
+
+# Modelos
+
+---
+
+## ¿Qué son los modelos en OpenClaw?
+
+Los **modelos** son los **Large Language Models (LLMs)** que impulsan la inteligencia del agente:
+
+- 🤖 **Proveedores principales:** OpenAI (GPT), Anthropic (Claude), Google (Gemini), Meta (Llama)
+- 🏠 **Modelos locales:** Ollama, LM Studio (para privacidad o sin internet)
+- 🔧 **Configuración:** Se definen en `openclaw.json` con API keys y parámetros en lugar seguro
+
+---
+
+**Ejemplo básico:**
+```json
+"model": {
+  "primary": "openrouter/minimax/minimax-m2.5:free"
+}
+```
+
+> 💡 **El modelo es el "cerebro" — determina calidad, velocidad y capacidades del agente.**
+
+---
+
+## Por qué elegir un buen modelo
+
+Un buen modelo impacta directamente en la experiencia del usuario:
+
+| Aspecto | Importancia |
+|---------|-------------|
+| **Calidad de respuesta** | Comprensión precisa, respuestas coherentes |
+| **Velocidad** | Tiempo de respuesta (crucial para chat en tiempo real) |
+| **Costo** | Tokens consumidos vs. presupuesto |
+| **Capacidades** | Razonamiento, creatividad, manejo de contexto largo |
+| **Fiabilidad** | Disponibilidad y estabilidad del servicio |
+ 
+---
+
+**Ejemplo comparativo:**
+- GPT-3.5: Rápido y barato, pero limitado en complejidad
+- GPT-4: Más inteligente, pero más caro y lento
+- Claude: Excelente en ética y seguridad
+- Gemini, Minimax, Qwen...
+
+---
+
+## Múltiples modelos
+
+OpenClaw nos va a permitir configurar múltiples modelos, incluso nos permitirá asignar modelos por canal, sesión, tarea...etc
+
+
+
+> 💡 **Es importante configurar siempre, al menos, un modelo de fallback.**
+---
+
+## La importancia del fallback
+
+**¿Por qué un fallback?** Porque ningún proveedor es infalible:
+
+- 🚨 **Downtime:** OpenAI ha tenido outages (ej: incidentes de 2023-2024)
+- 📈 **Límites de rate:** Cuotas diarias/mensuales pueden agotarse
+- 💰 **Costos variables:** Cambios en pricing sin aviso
+- 🌍 **Regulaciones:** Restricciones geográficas o compliance
+- 🔄 **Diversidad:** Diferentes modelos para diferentes tareas
+
+> ⚠️ **Sin fallback, tu agente queda "mudo" si el proveedor principal falla.**
+
+---
+
+## Modelos recomendados para empezar
+
+| Modelo | Proveedor | Ventajas | Desventajas | Costo aproximado |
+|--------|-----------|----------|-------------|------------------|
+| **GPT-4** | OpenAI | Inteligente, versátil | Caro, rate limits | $0.03/1K tokens |
+| **Claude 3** | Anthropic | Ético, creativo | Menos herramientas | $0.015/1K tokens |
+| **Gemini Pro** | Google | Gratuito para pruebas | Menos maduro | $0.001/1K tokens |
+| **Llama 2 7B** | Meta (local) | Privado, sin costo | Requiere hardware | $0 (una vez descargado) |
+
+**Recomendación inicial:**
+- **Producción:** GPT-4 + Claude como fallback
+- **Desarrollo:** Gemini o local para ahorrar costos
+- **Privacidad:** Siempre incluir opción local
+
+---
+
+## Mejores prácticas con modelos
+
+- 🔄 **Monitorea uso:** Tokens consumidos, latencia, errores
+- 💸 **Presupuesto:** Establece límites para evitar sorpresas
+- 🧪 **Testea:** Prueba prompts en diferentes modelos
+- 🔄 **Actualiza:** Nuevos modelos salen regularmente
+- 🌐 **Multi-región:** Usa proveedores con datacenters cercanos
+
+**Comando útil:**
+```bash
+# Ver métricas de uso
+openclaw models status
+```
+
+---
+
+# Sesiones 
+
+---
+
+## ¿Qué es una sesión en OpenClaw?
+
+Una **sesión** es una conversación continua entre un usuario y el agente:
+
+- 🔄 **Estado persistente:** El agente recuerda el contexto a lo largo de la interacción
+- 📝 **Historial completo:** Todos los mensajes previos se incluyen en cada petición al LLM
+- 🆔 **Identificador único:** Cada sesión tiene un ID para rastrear y gestionar
+- ⏰ **Tiempo de vida:** Las sesiones pueden expirar o reiniciarse según configuración
+
+> 💡 **Sin sesiones, cada mensaje sería independiente — como un LLM básico.**
+
+---
+
+## Gestión de sesiones
+
+OpenClaw gestiona las sesiones automáticamente:
+
+| Aspecto | Cómo funciona |
+|---------|---------------|
+| **Creación** | Primera interacción inicia una nueva sesión |
+| **Persistencia** | Historial guardado en base de datos o memoria |
+| **Expiración** | Configurable (ej: 24h inactivas) |
+| **Reinicio** | Comando `/reiniciar` o manual en web |
+| **Multi-usuario** | Sesiones separadas por canal/usuario |
+
+---
+
+# Canales
+
+---
+
+## ¿Qué son los canales en OpenClaw?
+
+Un **canal** es la vía por la que los usuarios se comunican con el agente:
+
+- 💬 **Entrada:** Recibe los mensajes del usuario (texto, comandos, eventos)
+- 🤖 **Procesamiento:** El agente genera la respuesta
+- 📤 **Salida:** Devuelve la respuesta por el mismo canal
+
+---
+
+**Canales soportados:**
+
+| Canal | Tipo | Caso de uso |
+|-------|------|-------------|
+| **Terminal (TUI)** | Local | Desarrollo y pruebas |
+| **Web** | HTTP | Panel de administración |
+| **Discord** | Mensajería | Comunidades, equipos técnicos |
+| **Telegram** | Mensajería | Bots de atención, demos |
+| **Slack** | Mensajería | Entornos corporativos |
+| **API REST** | Programático | Integración en otras apps |
+| **...** | ... | ... |
+
+---
+
+![bg left](img/openclaw/channels.png)
+
+- Integraciones
+A día de hoy: BlueBubbles, Discord, Feishu, Google Chat, iMessage (legacy), IRC, LINE, Matrix, Mattermost, Microsoft Teams, Nextcloud Talk, Nostr, Signal, Slack, Synology Chat, Telegram, Tlon, Twitch, Voice Call, WebChat, WhatsApp, Zalo, Zalo Personal.
+
+---
+
+## ¿Por qué son importantes los canales?
+
+Los canales son la **interfaz entre el agente y el mundo real**:
+
+- 🌍 **Alcance:** El mismo agente puede estar en Discord, Telegram y la web simultáneamente
+- 🎯 **Contexto:** Cada canal puede tener su propia identidad o comportamiento
+- 🔒 **Control:** Puedes restringir qué usuarios o canales tienen acceso
+- 📊 **Trazabilidad:** Cada sesión queda asociada al canal de origen
+
+> 💡 **Sin canales, el agente solo existe en local — los canales son los que lo llevan a producción.**
+
+---
+
+## Cómo funciona un canal
+
+El flujo de un mensaje en cualquier canal es siempre el mismo:
+
+```
+Usuario escribe mensaje
+        ↓
+  Canal lo recibe
+        ↓
+OpenClaw crea/recupera sesión
+        ↓
+  Carga workspace (SOUL, IDENTITY, TOOLS...)
+        ↓
+  LLM genera respuesta
+        ↓
+  Canal devuelve la respuesta
+        ↓
+   Usuario la recibe
+```
+
+**Clave:** El canal es transparente — el agente no sabe si habla por Discord o Telegram.
+
+---
+
+## Configuración de canales
+
+Los canales se configuran en `openclaw.json`:
+
+```json
+"channels": {
+  "discord": {
+    "enabled": true,
+    "token": "${DISCORD_BOT_TOKEN}",
+    "guildId": "${DISCORD_GUILD_ID}"
+  },
+  "telegram": {
+    "enabled": true,
+    "token": "${TELEGRAM_BOT_TOKEN}"
+  },
+  ...
+}
+```
+
+> 💡 **Puedes tener múltiples canales activos a la vez** — cada uno con su propia configuración de acceso.
 
 ---
 
@@ -152,13 +428,6 @@ Crear el fichero `.env` en la raíz del proyecto
 * Arquitectura final (MI PC > Virtual Box > Docker > OpenClaw)
 * Acceso a los contenedores
 * Acceso a TUI (*Terminal User Interface*)
----
-## Acceso básicos
-
-Comandos habituales:
-Lanzar comandos: `docker compose run -it openclaw-cli <COMANDO>`
-
-Conectar con la máquina: `docker compose exec -it openclaw-gateway bash`
 
 ---
 
@@ -169,53 +438,76 @@ SSH Tunneling: https://iximiuz.com/en/posts/ssh-tunnels/
 ![alt text](img/ssh/ssh-tunnels.png)
 
 ---
+## Acceso básicos
 
-## TUI
+Comandos habituales:
+* Lanzar comandos: `docker compose run -it openclaw-cli <COMANDO>`
+* Conectar con la máquina: `docker compose exec -it openclaw-gateway bash`
+* Configurar openclaw `openclaw configure`
+* Abrir TUI `openclaw tui`
 
-* Qué es? 
-* Primera conversación (definiendo SOUL.MD e IDENTITY.md)
+---
+
+## TUI — Terminal User Interface
+
+La **TUI** es la interfaz de texto interactiva de OpenClaw, accesible desde el terminal:
+
+```bash
+openclaw tui
+```
+
+- ⌨️ **Sin necesidad de navegador** — todo desde la terminal
+- 💬 **Chat directo** con el agente en tiempo real
+- 🗂️ **Gestión de sesiones** — ver historial, cambiar agente activo
+- 📁 **Acceso al workspace** — editar `SOUL.md`, `IDENTITY.md`... sin salir
+- 🔧 **Diagnóstico rápido** — ver logs, estado del modelo, errores
+
+> 💡 **La TUI es la herramienta ideal para hacer la primera configuración del agente.**
+
+---
+
+## TUI — Primera conversación
+
+Al abrir la TUI por primera vez, el agente usa los valores por defecto del workspace:
+
+1. **Abre la TUI:** `openclaw tui`
+2. **Escribe un mensaje** — el agente responde con su identidad actual
+3. **Edita `SOUL.md`** para darle instrucciones base (quién es, cómo responde)
+4. **Edita `IDENTITY.md`** para definir nombre, empresa, tono
+5. **Reinicia la sesión** — los cambios se aplican en la siguiente conversación
+---
+## TUI — Primera conversación
+
+Pantalla de presentación
+
+```
+┌─ OpenClaw TUI ─────────────────────────────────┐
+│ Sesión: abc123  │  Modelo: minimax-m2.5         │
+│                                                 │
+│ Tú: Hola, ¿quién eres?                          │
+│ Agente: Soy tu asistente. ¿En qué te ayudo?     │
+│                                                 │
+│ > _                                             │
+└─────────────────────────────────────────────────┘
+```
+
+---
 
 ## Web
 
-* Cómo abro el panel?
-* Problema con el timezone del docker (está en UTC)
 
-Peticiones pendientes: `openclaw devices approve`
----
+![bg left](img/openclaw/web_panel.png)
 
----
 
-## ¿Qué es una sesión en OpenClaw?
+* Nos permite configurar lo mismo que por configure
+* Acceso simplificado y seguro
+* Permite un "acceso totalmente remoto"
 
-Una **sesión** es una conversación continua entre un usuario y el agente:
-
-- 🔄 **Estado persistente:** El agente recuerda el contexto a lo largo de la interacción
-- 📝 **Historial completo:** Todos los mensajes previos se incluyen en cada petición al LLM
-- 🆔 **Identificador único:** Cada sesión tiene un ID para rastrear y gestionar
-- ⏰ **Tiempo de vida:** Las sesiones pueden expirar o reiniciarse según configuración
-
-> 💡 **Sin sesiones, cada mensaje sería independiente — como un LLM básico.**
+<!-- Peticiones pendientes: `openclaw devices approve` -->
 
 ---
 
-## Gestión de sesiones
-
-OpenClaw gestiona las sesiones automáticamente:
-
-| Aspecto | Cómo funciona |
-|---------|---------------|
-| **Creación** | Primera interacción inicia una nueva sesión |
-| **Persistencia** | Historial guardado en base de datos o memoria |
-| **Expiración** | Configurable (ej: 24h inactivas) |
-| **Reinicio** | Comando `/reiniciar` o manual en web |
-| **Multi-usuario** | Sesiones separadas por canal/usuario |
-
-**Ejemplo de configuración en `agent.yaml`:**
-```yaml
-sessions:
-  max_age: 86400  # 24 horas en segundos
-  storage: "memory"  # o "database"
-```
+# Contexto
 
 ---
 
@@ -270,147 +562,11 @@ Agent: Los precios parten desde 500€/mes. Te paso con ventas para cotización 
 
 ---
 
-## Modelos
-
----
-
-## ¿Qué son los modelos en OpenClaw?
-
-Los **modelos** son los **Large Language Models (LLMs)** que impulsan la inteligencia del agente:
-
-- 🤖 **Proveedores principales:** OpenAI (GPT), Anthropic (Claude), Google (Gemini), Meta (Llama)
-- 🏠 **Modelos locales:** Ollama, LM Studio (para privacidad o sin internet)
-- 🔧 **Configuración:** Se definen en `agent.yaml` con API keys y parámetros
-
-**Ejemplo básico:**
-```yaml
-model:
-  provider: openai
-  model: gpt-4
-  api_key: "${OPENAI_API_KEY}"
-```
-
-> 💡 **El modelo es el "cerebro" — determina calidad, velocidad y capacidades del agente.**
-
----
-
-## Por qué elegir un buen modelo
-
-Un buen modelo impacta directamente en la experiencia del usuario:
-
-| Aspecto | Importancia |
-|---------|-------------|
-| **Calidad de respuesta** | Comprensión precisa, respuestas coherentes |
-| **Velocidad** | Tiempo de respuesta (crucial para chat en tiempo real) |
-| **Costo** | Tokens consumidos vs. presupuesto |
-| **Capacidades** | Razonamiento, creatividad, manejo de contexto largo |
-| **Fiabilidad** | Disponibilidad y estabilidad del servicio |
-
-**Ejemplo comparativo:**
-- GPT-3.5: Rápido y barato, pero limitado en complejidad
-- GPT-4: Más inteligente, pero más caro y lento
-- Claude: Excelente en ética y seguridad
-
----
-
-## La importancia del fallback
-
-**¿Por qué un fallback?** Porque ningún proveedor es infalible:
-
-- 🚨 **Downtime:** OpenAI ha tenido outages (ej: incidentes de 2023-2024)
-- 📈 **Límites de rate:** Cuotas diarias/mensuales pueden agotarse
-- 💰 **Costos variables:** Cambios en pricing sin aviso
-- 🌍 **Regulaciones:** Restricciones geográficas o compliance
-- 🔄 **Diversidad:** Diferentes modelos para diferentes tareas
-
-> ⚠️ **Sin fallback, tu agente queda "mudo" si el proveedor principal falla.**
-
----
-
-## Configuración de fallback en OpenClaw
-
-OpenClaw soporta **múltiples modelos con fallback automático:**
-
-```yaml
- "agents": {
-    "defaults": {
-      "model": {
-        "primary": "openrouter/minimax/minimax-m2.5:free"
-      },
-      "models": {
-        "minimax/MiniMax-M2.5": {},
-        "minimax/MiniMax-M2.5-highspeed": {},
-        "openrouter/auto": {
-          "alias": "OpenRouter"
-        },
-        "openrouter/minimax/minimax-m2.5:free": {}
-      },
-      "workspace": "/home/node/.openclaw/workspace"
-    },
-    "list": [
-      {
-        "id": "main",
-        "model": {
-          "primary": "openrouter/minimax/minimax-m2.5:free",
-          "fallbacks": [
-            "minimax/MiniMax-M2.5-highspeed"
-          ]
-        }
-      }
-    ]
-  },
-
-
-```
-
-**Cómo funciona:**
-1. Intenta el modelo primary
-2. Si falla (error, rate limit), pasa al fallbacks (en orden)
-3. Transición transparente para el usuario
-
----
-
-## Modelos recomendados para empezar
-
-| Modelo | Proveedor | Ventajas | Desventajas | Costo aproximado |
-|--------|-----------|----------|-------------|------------------|
-| **GPT-4** | OpenAI | Inteligente, versátil | Caro, rate limits | $0.03/1K tokens |
-| **Claude 3** | Anthropic | Ético, creativo | Menos herramientas | $0.015/1K tokens |
-| **Gemini Pro** | Google | Gratuito para pruebas | Menos maduro | $0.001/1K tokens |
-| **Llama 2 7B** | Meta (local) | Privado, sin costo | Requiere hardware | $0 (una vez descargado) |
-
-**Recomendación inicial:**
-- **Producción:** GPT-4 + Claude como fallback
-- **Desarrollo:** Gemini o local para ahorrar costos
-- **Privacidad:** Siempre incluir opción local
-
----
-
-## Mejores prácticas con modelos
-
-- 🔄 **Monitorea uso:** Tokens consumidos, latencia, errores
-- 💸 **Presupuesto:** Establece límites para evitar sorpresas
-- 🧪 **Testea:** Prueba prompts en diferentes modelos
-- 🔄 **Actualiza:** Nuevos modelos salen regularmente
-- 🌐 **Multi-región:** Usa proveedores con datacenters cercanos
-
-**Comando útil:**
-```bash
-# Ver métricas de uso
-openclaw models status
-```
-
----
-
 ## Estructura de archivos
 * Qué ficheros son relevantes? 
   * openclaw.json
   * workspace/
-
-## Contexto
-
-AGENTS.md  BOOTSTRAP.md  HEARTBEAT.md  IDENTITY.md  SOUL.md  TOOLS.md  USER.md
-
+  
 ---
 
 ## El Workspace: el cerebro del agente
@@ -421,6 +577,8 @@ El **workspace** es el directorio central donde OpenClaw almacena toda la config
 - 📝 **Formato:** Archivos Markdown simples y editables
 - 🔄 **Lectura dinámica:** Se lee **cada vez que arranca una conversación**
 - 🛠️ **Personalización:** Modifica archivos sin reiniciar el sistema
+
+---
 
 **Estructura típica:**
 ```
@@ -447,6 +605,8 @@ workspace/
 - 📖 **Legible:** Formato humano-friendly
 - 🔧 **Flexible:** Soporta texto, listas, tablas, código
 - 🤖 **Parseable:** OpenClaw lo convierte automáticamente a configuración
+
+---
 
 **Ejemplo de edición en tiempo real:**
 ```bash
@@ -481,6 +641,8 @@ El workspace no es solo de lectura — el agente **también puede crear y modifi
 - 📊 **Estado de usuario:** Preferencias o datos aprendidos se persisten en `USER.md`
 - 📁 **Ficheros propios:** El agente puede crear ficheros nuevos para organizarse
 
+---
+
 **Ejemplo — lista de la compra:**
 ```
 Usuario: Añade leche a mi lista de la compra
@@ -498,6 +660,8 @@ Usuario: Añade leche a mi lista de la compra
 ## Los archivos clave en OpenClaw
 
 OpenClaw usa archivos Markdown en el directorio `workspace/` para definir el comportamiento y contexto del agente. Cada archivo tiene un propósito específico:
+
+---
 
 | Archivo | Propósito | Ejemplo |
 |---------|-----------|---------|
@@ -517,6 +681,8 @@ OpenClaw usa archivos Markdown en el directorio `workspace/` para definir el com
 
 **Propósito:** Especifica qué agentes existen y sus configuraciones.
 
+https://docs.openclaw.ai/reference/templates/AGENTS
+
 **Ejemplo:**
 ```markdown
 # Agentes disponibles
@@ -532,13 +698,15 @@ OpenClaw usa archivos Markdown en el directorio `workspace/` para definir el com
 - Rol: Soporte técnico
 ```
 
-**Papel:** Permite tener múltiples agentes especializados en un solo sistema.
+<!-- **Papel:** Permite tener múltiples agentes especializados en un solo sistema. -->
 
 ---
 
 ## IDENTITY.md — La personalidad del agente
 
 **Propósito:** Define quién es el agente y cómo se comporta.
+
+https://docs.openclaw.ai/reference/templates/IDENTITY
 
 **Ejemplo:**
 ```markdown
@@ -551,13 +719,15 @@ OpenClaw usa archivos Markdown en el directorio `workspace/` para definir el com
 **Restricciones:** No compartir info sensible, derivar ventas al equipo comercial
 ```
 
-**Papel:** Crea consistencia en todas las interacciones.
+<!-- **Papel:** Crea consistencia en todas las interacciones. -->
 
 ---
 
 ## SOUL.md — El corazón del agente
 
 **Propósito:** Contiene el System Prompt que guía todas las respuestas.
+
+https://docs.openclaw.ai/reference/templates/SOUL
 
 **Ejemplo:**
 ```markdown
@@ -578,20 +748,27 @@ Si preguntan precios, deriva a ventas.
 
 **Ejemplo:**
 ```markdown
-# Herramientas disponibles
+### Cameras
 
-## Consultar clima
-- Comando: weather_api
-- Parámetros: ciudad
-- Descripción: Obtiene pronóstico del tiempo
+- living-room → Main area, 180° wide angle
+- front-door → Entrance, motion-triggered
 
-## Enviar email
-- Comando: send_email
-- Parámetros: destinatario, asunto, cuerpo
-- Descripción: Envía correos corporativos
+### SSH
+
+- home-server → 192.168.1.100, user: admin
+
+### TTS
+
+- Preferred voice: "Nova" (warm, slightly British)
 ```
 
 **Papel:** Extiende capacidades del agente más allá del texto.
+
+---
+## TOOLS.md — Las habilidades del agente
+
+![alt text](img/openclaw/tools.png)
+
 
 ---
 
@@ -630,6 +807,7 @@ Si preguntan precios, deriva a ventas.
 2. Cargar modelos de IA
 3. Iniciar canales de comunicación
 ```
+---
 
 **HEARTBEAT.md:**
 - Estado de salud del sistema
@@ -647,7 +825,11 @@ Si preguntan precios, deriva a ventas.
 
 ---
 
-## Primer canal  💻 Hola Mundo en Consola
+# Nuestro Primer canal  
+
+---
+
+## 💻 Hola Mundo en Consola
 
 ![alt text](img/openclaw/first_run.png)
 
@@ -721,150 +903,28 @@ Esto es posible porque cada mensaje incluye el historial previo al LLM:
 ```
 
 
+---
 
-## 🧪 Ejercicio 1 — Hola Mundo
-
-1. Crea tu `agent.yaml` con el System Prompt del recepcionista
-2. Personaliza la empresa con un nombre ficticio tuyo
-3. Inicia el agente en consola
-4. Comprueba que recuerda tu nombre entre turnos
-5. Prueba a preguntarle algo que *no debería saber*: ¿cómo responde?
-
-**Objetivo:** Sentir la diferencia entre un LLM genérico y un agente con identidad propia.
+# 📢 Nuestro segundo canal: Discord 
 
 ---
 
-# Bloque 3
-## 📱 Despliegue en Telegram
+## Paso 1: Crear la aplicación en Discord Developer Portal
 
-*Del terminal al mundo real en 15 minutos*
-
----
-
-## ¿Por qué Telegram?
-
-- ✅ API de bots **gratuita y estable**
-- ✅ No requiere servidor web ni HTTPS para empezar (long polling)
-- ✅ OpenClaw tiene integración **nativa** — sin código extra
-- ✅ Los alumnos pueden probarlo desde su **móvil** en tiempo real
-- ✅ Ideal para **demos** y **prototipos** corporativos
-
----
-
-## Paso 1: Crear el bot en BotFather
-
-1. Abre Telegram y busca **@BotFather**
-2. Envía `/newbot`
-3. Elige un nombre para tu bot: `TechCorp Recepcionista`
-4. Elige un username (debe terminar en `bot`): `techcorp_recep_bot`
-5. BotFather te dará un **token**:
-
-```
-Done! Congratulations on your new bot.
-Use this token to access the HTTP API:
-7123456789:AAF8xQ3mN...Zk9
-```
-
-> 🔐 **Guarda este token. Es la llave de tu bot.**
-
----
-
-## Paso 2: Conectar el token a OpenClaw
-
-Añade la configuración de Telegram en tu `agent.yaml`:
-
-```yaml
-# agent.yaml
-name: recepcionista
-# ... resto de configuración ...
-
-channels:
-  telegram:
-    enabled: true
-    token: "${TELEGRAM_BOT_TOKEN}"   # leer del .env
-```
-
-Y en tu `.env`:
-
-```bash
-TELEGRAM_BOT_TOKEN=7123456789:AAF8xQ3mN...Zk9
-```
-
----
-
-## Paso 3: Arrancar el bot
-
-```bash
-# Iniciar OpenClaw con canal Telegram
-python -m openclaw run --config agent.yaml
-
-# Verás:
-# ✅ OpenClaw v1.x iniciado
-# 📱 Telegram: escuchando (long polling)
-# 🤖 Bot activo: @techcorp_recep_bot
-```
-
-Ahora abre Telegram, busca tu bot por su username y envía `/start`.
-
----
-
-## ¡El bot responde! 🎉
-
-```
-Tú: /start
-
-Bot: ¡Hola! Soy Alex, el asistente virtual de TechCorp.
-     ¿En qué puedo ayudarte hoy?
-
-Tú: Quiero información sobre vuestros productos
-
-Bot: Con mucho gusto. TechCorp ofrece soluciones de software
-     empresarial. Para información detallada sobre productos
-     y precios, puedo conectarte con nuestro equipo comercial.
-     ¿Quieres que lo haga?
-```
-
----
-
-## Comandos útiles del bot
-
-Puedes definir **comandos Telegram** en el `agent.yaml`:
-
-```yaml
-channels:
-  telegram:
-    enabled: true
-    token: "${TELEGRAM_BOT_TOKEN}"
-    commands:
-      - command: start
-        description: Iniciar conversación
-      - command: ayuda
-        description: Ver qué puedo hacer
-      - command: reiniciar
-        description: Borrar historial y empezar de nuevo
-```
-
----
-
-## 🧪 Ejercicio 2 — Bot en Discord
-
-> *En pairing — un alumno comparte pantalla*
-
-**Paso 1: Crear la aplicación en Discord Developer Portal**
 1. Ve a [discord.com/developers/applications](https://discord.com/developers/applications)
 2. Clic en **New Application** → ponle un nombre (ej: `TechCorp Bot`)
 3. Ve a la sección **Bot** → clic en **Add Bot**
 4. En **Token**, clic en **Reset Token** y cópialo
 
-**Paso 2: Obtener el Guild ID (servidor)**
+-- 
+
+## Paso 2: Paso 2: Obtener el Guild ID (servidor)
 1. Activa el **Modo Desarrollador** en Discord (Ajustes → Avanzado)
 2. Click derecho sobre tu servidor → **Copiar ID del servidor**
 
 ---
 
-## 🧪 Ejercicio 2 — Bot en Discord (cont.)
-
-**Paso 3: Configurar OpenClaw**
+## Paso 3: Configurar OpenClaw
 
 En `.env`:
 ```bash
@@ -872,22 +932,78 @@ DISCORD_BOT_TOKEN=tu_token_aquí
 DISCORD_GUILD_ID=tu_guild_id_aquí
 ```
 
-**Paso 4: Invitar el bot al servidor**
+A partir de aquí, utilizamos `openclaw configure`
+
+
+---
+
+## Paso 4: Invitar el bot al servidor
 1. En el portal, ve a **OAuth2 → URL Generator**
 2. Scopes: `bot` · Permissions: `Send Messages`, `Read Message History`
 3. Copia la URL generada y ábrela para invitar el bot
 
-**Paso 5: Arrancar y probar**
+---
+
+## Paso 5: Arrancar y probar
 - Inicia OpenClaw y escribe en el canal del servidor
 - Comparte el servidor con un compañero para que lo pruebe
 
 **Bonus:** Cambia `SOUL.md` para que el bot se presente con tu empresa ficticia.
 
+
 ---
 
-## Ejercicio 3 - La lista de la compra
+# Ejercicios adicionales
 
---- 
+---
+
+## 🧪 Ejercicio 3 — La lista de la compra
+
+**Objetivo:** Que el agente gestione una lista de la compra persistente, modificable desde cualquier canal.
+
+**Cómo funciona:**
+- El agente guarda la lista en `workspace/lista_compra.md`
+- La lee al arrancar cada conversación
+- Puede añadir, tachar y listar ítems mediante lenguaje natural
+
+---
+
+**Pasos:**
+1. Edita `SOUL.md` para indicar al agente que gestiona una lista de la compra (opcional)
+2. Dile: *"Añade leche, pan y huevos a la lista"*
+3. Dile: *"Ya compré el pan, márcalo"*
+4. Dile: *"¿Qué me falta comprar?"*
+5. Prueba desde **Discord** y comprueba que la lista persiste entre canales
+
+---
+
+## 🧪 Ejercicio 3 — La lista de la compra (cont.)
+
+**Ejemplo de `SOUL.md`:**
+```markdown
+Eres un asistente doméstico que gestiona la lista de la compra.
+La lista se guarda en workspace/lista_compra.md.
+Cuando el usuario añada algo, actualiza el fichero con - [ ] ítem.
+Cuando diga que ya lo compró, cámbialo a - [x] ítem.
+Al preguntar qué falta, muestra solo los ítems sin tachar.
+```
+---
+
+**Ejemplo de conversación:**
+```
+Tú:     Añade leche y café
+Agente: ✅ Añadidos. Tu lista ahora tiene: leche, café, pan...
+
+Tú:     Ya compré el café
+Agente: ✅ Marcado. Te queda: leche, pan...
+
+Tú:     ¿Qué me falta?
+Agente: 🛒 Pendiente: leche, pan
+```
+
+> 💡 Abre `workspace/lista_compra.md` y verifica que el fichero se ha actualizado.
+
+---
 
 ## Ejercicio 4 - Resumen de documentos
 

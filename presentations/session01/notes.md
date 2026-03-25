@@ -112,3 +112,121 @@ Config overwrite: /home/node/.openclaw/openclaw.json (sha256 70206a2649c026269d7
 
 
 Integrar mailtrap.io ??
+
+
+
+# Bloque 3
+## 📱 Despliegue en Telegram
+
+*Del terminal al mundo real en 15 minutos*
+
+---
+
+## ¿Por qué Telegram?
+
+- ✅ API de bots **gratuita y estable**
+- ✅ No requiere servidor web ni HTTPS para empezar (long polling)
+- ✅ OpenClaw tiene integración **nativa** — sin código extra
+- ✅ Los alumnos pueden probarlo desde su **móvil** en tiempo real
+- ✅ Ideal para **demos** y **prototipos** corporativos
+
+---
+
+## Paso 1: Crear el bot en BotFather
+
+1. Abre Telegram y busca **@BotFather**
+2. Envía `/newbot`
+3. Elige un nombre para tu bot: `TechCorp Recepcionista`
+4. Elige un username (debe terminar en `bot`): `techcorp_recep_bot`
+5. BotFather te dará un **token**:
+
+```
+Done! Congratulations on your new bot.
+Use this token to access the HTTP API:
+7123456789:AAF8xQ3mN...Zk9
+```
+
+> 🔐 **Guarda este token. Es la llave de tu bot.**
+
+---
+
+## Paso 2: Conectar el token a OpenClaw
+
+Añade la configuración de Telegram en tu `agent.yaml`:
+
+```yaml
+# agent.yaml
+name: recepcionista
+# ... resto de configuración ...
+
+channels:
+  telegram:
+    enabled: true
+    token: "${TELEGRAM_BOT_TOKEN}"   # leer del .env
+```
+
+Y en tu `.env`:
+
+```bash
+TELEGRAM_BOT_TOKEN=7123456789:AAF8xQ3mN...Zk9
+```
+
+---
+
+## Paso 3: Arrancar el bot
+
+```bash
+# Iniciar OpenClaw con canal Telegram
+python -m openclaw run --config agent.yaml
+
+# Verás:
+# ✅ OpenClaw v1.x iniciado
+# 📱 Telegram: escuchando (long polling)
+# 🤖 Bot activo: @techcorp_recep_bot
+```
+
+Ahora abre Telegram, busca tu bot por su username y envía `/start`.
+
+---
+
+## ¡El bot responde! 🎉
+
+```
+Tú: /start
+
+Bot: ¡Hola! Soy Alex, el asistente virtual de TechCorp.
+     ¿En qué puedo ayudarte hoy?
+
+Tú: Quiero información sobre vuestros productos
+
+Bot: Con mucho gusto. TechCorp ofrece soluciones de software
+     empresarial. Para información detallada sobre productos
+     y precios, puedo conectarte con nuestro equipo comercial.
+     ¿Quieres que lo haga?
+```
+
+---
+
+## Comandos útiles del bot
+
+Puedes definir **comandos Telegram** en el `agent.yaml`:
+
+```yaml
+channels:
+  telegram:
+    enabled: true
+    token: "${TELEGRAM_BOT_TOKEN}"
+    commands:
+      - command: start
+        description: Iniciar conversación
+      - command: ayuda
+        description: Ver qué puedo hacer
+      - command: reiniciar
+        description: Borrar historial y empezar de nuevo
+```
+
+---
+
+## 🧪 Ejercicio 2 — Bot en Discord
+
+> *En pairing — un alumno comparte pantalla*
