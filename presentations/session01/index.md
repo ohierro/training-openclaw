@@ -1005,11 +1005,140 @@ Agente: 🛒 Pendiente: leche, pan
 
 ---
 
-## Ejercicio 4 - Resumen de documentos
+## 🧪 Ejercicio 4 — Resumen de documentos
+
+**Objetivo:** Que el agente lea documentos de alumnos desde el workspace, genere un resumen por alumno y cree un informe consolidado con citas guardado en disco.
+
+**Cómo funciona:**
+- Los documentos están en `workspace/alumnos/` (uno por alumno)
+- El agente los lee al arrancar la conversación
+- Genera resúmenes individuales y un informe final con citas
 
 ---
 
-## Ejercicio 5 - Cron jobs
+**Pasos:**
+1. Copia los ficheros de alumnos en `workspace/alumnos/` (ya están en `session01/data/`)
+2. Actualiza `SOUL.md` para indicar al agente que es un evaluador académico
+3. Pide: *"Haz un resumen del trabajo de cada alumno"*
+4. Pide: *"Genera un informe consolidado con citas y guárdalo en workspace/informe_final.md"*
+5. Abre `workspace/informe_final.md` y verifica el resultado
+
+---
+
+## 🧪 Ejercicio 4 — Resumen de documentos (cont.)
+
+**Ejemplo de `SOUL.md`:**
+```markdown
+Eres un evaluador académico. Tienes acceso a los trabajos de los
+alumnos en workspace/alumnos/. Al resumir, sé objetivo y conciso.
+Usa el formato: ## Alumno X · [título del trabajo]
+Cuando generes el informe final, incluye citas textuales entre
+comillas y guárdalo en workspace/informe_final.md.
+```
+
+---
+
+**Ejemplo de conversación:**
+```
+Tú:     Resume el trabajo de cada alumno
+
+Agente: ## Alumno 01 · Redes Neuronales
+        Analiza arquitecturas CNN aplicadas a visión...
+
+        ## Alumno 02 · NLP con Transformers
+        Compara BERT y GPT en tareas de clasificación...
+
+Tú:     Genera el informe consolidado y guárdalo
+
+Agente: ✅ Informe guardado en workspace/informe_final.md
+        Incluye resúmenes y citas de 5 trabajos.
+```
+
+> 💡 Comprueba que `workspace/informe_final.md` existe y contiene las citas correctas.
+
+---
+
+## 🧪 Ejercicio 5 — Resumen de noticias por cron
+
+**Objetivo:** Programar una tarea diaria que busque noticias en `marca.es`, las resuma y las envíe automáticamente por **Discord**.
+
+**Cómo funciona:**
+- Se registra un **cron job** con `openclaw cron add` apuntando al canal Discord
+- El agente visita `marca.es`, extrae los titulares y genera un resumen
+- Lo envía **directamente a Discord** sin intervención manual
+
+---
+
+## ⏰ Cron vs Heartbeat
+
+📖 [docs.openclaw.ai/automation/cron-vs-heartbeat](https://docs.openclaw.ai/automation/cron-vs-heartbeat)
+
+| | **Heartbeat** | **Cron (isolated)** |
+|--|:--:|:--:|
+| Timing | Cada N minutos (aprox.) | Expresión cron exacta |
+| Contexto | Sesión principal (memoria) | Sesión limpia por ejecución |
+| Uso ideal | Monitoreo, inbox, calendario | Informes diarios, tareas precisas |
+| Coste | Menor (una llamada batcheada) | Una llamada por job |
+| Historial | Compartido con el agente | No contamina la sesión principal |
+| Entrega | Solo si hay algo importante | `--announce` → directo al canal |
+
+---
+
+**¿Cuándo usar cada uno?**
+
+- 🫀 **Heartbeat** → *"Vigila mi email cada 30 min y avísame si hay algo urgente"*
+- ⏰ **Cron** → *"Mándame el resumen de noticias todos los días a las 8:00"*
+
+> 💡 Lo más eficiente es **combinar ambos**: heartbeat para monitoreo continuo + cron para tareas puntuales con horario fijo.
+
+---
+
+**Pasos:**
+1. Asegúrate de que el canal Discord está activo y configurado
+2. Registra el cron desde la **TUI o terminal** con `openclaw cron add`
+3. Edita `SOUL.md` para que el agente sepa resumir noticias deportivas
+4. **Verifica en la web** (`openclaw web`) que el job aparece activo en el panel de cron
+5. Espera la primera ejecución (o fuerza una manual) y comprueba el mensaje en Discord
+
+---
+
+## 🧪 Ejercicio 5 — Resumen de noticias (cont.)
+
+**Registrar el cron job:**
+```bash
+openclaw cron add \
+  --name "Resumen deportivo" \
+  --cron "0 8 * * *" \
+  --tz "Europe/Madrid" \
+  --session isolated \
+  --message "Busca los 5 titulares más importantes de https://www.marca.es hoy. Incluye titular, párrafo de contexto y enlace. Formato: 🗞️ **Resumen deportivo — [fecha]**" \
+  --announce \
+  --channel discord
+```
+
+---
+
+**Verificación en el panel web:**
+
+```
+openclaw web   →   Sección "Cron Jobs"
+┌──────────────────────────────────────────────────────┐
+│ ✅ Resumen deportivo   │ 0 8 * * *  │ discord  │ ▶ Run │
+└──────────────────────────────────────────────────────┘
+```
+
+**Ejemplo de mensaje recibido en Discord:**
+```
+🗞️ Resumen deportivo — 25 mar 2026
+
+1️⃣ Real Madrid golea al Barça en el Clásico (3-0)
+   🔗 marca.es/futbol/primera-division/...
+2️⃣ Alcaraz confirma su presencia en Roland Garros
+   🔗 marca.es/tenis/...
+...
+```
+
+> 💡 Cambia la URL por cualquier otra fuente y ajusta `--tz` a tu zona horaria.
 
 ---
 
@@ -1031,7 +1160,7 @@ Agente: 🛒 Pendiente: leche, pan
 
 > *"El agente ya sabe hablar... ahora le damos manos."*
 
-En la **Sesión 2** aprenderemos a crear **Skills** (herramientas) para que el agente:
+En la próxima sesión aprenderemos a crear **Skills** (herramientas) para que el agente:
 
 - 🌐 Consulte APIs en tiempo real (clima, precios, datos...)
 - 📝 Registre leads en una hoja de cálculo
