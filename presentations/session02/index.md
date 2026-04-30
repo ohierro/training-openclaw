@@ -15,12 +15,13 @@ paginate: true
 
 | Bloque | Tema | Tiempo |
 |--------|------|--------|
+|  ❓  | ¿Dónde estamos? | 5 mins |  
 | 🧠 1 | El contexto (la memoria del agente) | 60 min |
 |      | Descanso | 20 min |
 | 📱 2 | Despliegue en Discord | 40 min |
 |      | Descanso | 20 min |
 | 🌐 3 | Skill de Lectura/Escritura con Notion — API externa | 30 min |
-|  ❓  | Dudas y preguntas | 10 min |
+|  ❓  | Dudas y preguntas | 5 min |
 
 **Objetivo:** Que el agente deje de ser una caja de texto y empiece a actuar en el mundo real.
 
@@ -30,12 +31,182 @@ paginate: true
 
 ```
 Sesión 1 ✅  →  Agente básico. Acceso con TUI y Web.
-Sesión 2 🔴  →  Acceso con discord a nuestro agente. Agente que consulta datos y ejecuta acciones
+Sesión 2 🔴  →  Acceso con discord y telegram a nuestro agente. Agente que consulta datos y ejecuta acciones
 Sesión 3     →  Agente con acceso seguro a datos corporativos (MCP). Planificación de tareas
 Sesión 4     →  Orquestación multi-agente
 ```
 
-> El agente ya **sabe hablar**. Ahora le damos **manos**.
+> El agente ya **sabe hablar**. Ahora vamos a darle **manos**.
+
+
+---
+
+# 📱 Despliegue en Telegram
+
+*Del terminal al mundo real en 15 minutos*
+
+---
+
+## ¿Por qué Telegram?
+
+- ✅ API de bots **gratuita y estable**
+- ✅ No requiere servidor web ni HTTPS para empezar (long polling)
+- ✅ OpenClaw tiene integración **nativa** — sin código extra
+- ✅ Es posible probarlo desde un terminal **móvil** en tiempo real
+- ✅ Ideal para **demos** y **prototipos** corporativos
+
+---
+
+## Paso 1: Crear el bot en BotFather
+
+1. Abre Telegram y busca **@BotFather**
+2. Envía `/newbot`
+3. Elige un nombre para tu bot: `TechCorp Recepcionista`
+4. Elige un username (debe terminar en `bot`): `techcorp_recep_bot`
+5. BotFather te dará un **token**:
+
+```
+Done! Congratulations on your new bot.
+Use this token to access the HTTP API:
+7123456789:AAF8xQ3mN...Zk9
+```
+
+> 🔐 **Guarda este token. Es la llave de tu bot.**
+
+---
+
+## Paso 2: Conectar el token a OpenClaw
+
+Añade la configuración de Telegram en tu `agent.yaml`:
+
+```json
+.openclaw/openclaw.json
+
+"channels": {
+    "telegram": {
+        "enabled": true,
+        "groups": {
+        "*": {
+            "requireMention": true
+        }
+        },
+        "botToken": "${TELEGRAM_BOT_TOKEN}"
+    }
+}
+```
+
+Y en tu `.env`:
+
+```bash
+TELEGRAM_BOT_TOKEN=7123456789:AAF8xQ3mN...Zk9
+```
+
+---
+
+## Paso 3: Arrancar el bot
+
+```bash
+# Iniciar OpenClaw con canal Telegram
+python -m openclaw run --config agent.yaml
+
+# Verás:
+# ✅ OpenClaw v1.x iniciado
+# 📱 Telegram: escuchando (long polling)
+# 🤖 Bot activo: @techcorp_recep_bot
+```
+
+Ahora abre Telegram, busca tu bot por su username y envía `/start`.
+
+---
+
+## ¡El bot responde! 🎉
+
+```
+Tú: /start
+
+Bot: ¡Hola! Soy Alex, el asistente virtual de TechCorp.
+     ¿En qué puedo ayudarte hoy?
+
+Tú: Quiero información sobre vuestros productos
+
+Bot: Con mucho gusto. TechCorp ofrece soluciones de software
+     empresarial. Para información detallada sobre productos
+     y precios, puedo conectarte con nuestro equipo comercial.
+     ¿Quieres que lo haga?
+```
+---
+
+# Configuración de los canales
+
+```
+ "telegram": {
+      "enabled": true,
+      "dmPolicy": "pairing",
+      "botToken": "......",
+      "groups": {
+        "-id": {
+          "allowFrom": [
+            "*"
+          ],
+          "enabled": true,
+          "requireMention": false
+        },
+      },
+      "groupAllowFrom": [
+        "-5270964807",
+        "-5270091283"
+      ],
+      "groupPolicy": "allowlist",
+    }
+```
+
+
+---
+
+# 📢 Nuestro segundo canal: Discord 
+
+---
+
+## Paso 1: Crear la aplicación en Discord Developer Portal
+
+1. Ve a [discord.com/developers/applications](https://discord.com/developers/applications)
+2. Clic en **New Application** → ponle un nombre (ej: `TechCorp Bot`)
+3. Ve a la sección **Bot** → clic en **Add Bot**
+4. En **Token**, clic en **Reset Token** y cópialo
+
+-- 
+
+## Paso 2: Paso 2: Obtener el Guild ID (servidor)
+1. Activa el **Modo Desarrollador** en Discord (Ajustes → Avanzado)
+2. Click derecho sobre tu servidor → **Copiar ID del servidor**
+
+---
+
+## Paso 3: Configurar OpenClaw
+
+En `.env`:
+```bash
+DISCORD_BOT_TOKEN=tu_token_aquí
+DISCORD_GUILD_ID=tu_guild_id_aquí
+```
+
+A partir de aquí, utilizamos `openclaw configure`
+
+
+---
+
+## Paso 4: Invitar el bot al servidor
+1. En el portal, ve a **OAuth2 → URL Generator**
+2. Scopes: `bot` · Permissions: `Send Messages`, `Read Message History`
+3. Copia la URL generada y ábrela para invitar el bot
+
+---
+
+## Paso 5: Arrancar y probar
+- Inicia OpenClaw y escribe en el canal del servidor
+- Comparte el servidor con un compañero para que lo pruebe
+
+**Bonus:** Cambia `SOUL.md` para que el bot se presente con tu empresa ficticia.
 
 ---
 
@@ -130,6 +301,8 @@ workspace/
 
 ## ¿Por qué Markdown?
 
+Markdown: https://www.markdownguide.org/
+
 **Ventajas de usar Markdown para configuración:**
 
 - ✏️ **Fácil edición:** Cualquier editor de texto basta
@@ -147,6 +320,7 @@ nano ~/.openclaw/workspace/IDENTITY.md
 
 # El cambio se aplica en la siguiente conversación
 # ¡Sin reiniciar servicios!
+
 ```
 <!-- Vemos 2 tipos de agentes: técnico vs no técnico -->
 <!-- Técnico: Eres un experto consultor informático. Deberás utilizar un lenguaje formal y, podrás utilizar acrónimos. Además, podrás entrar en detalles muy técnicos, ya que tu interlocutor será un perfil muy técnico.-->
@@ -177,17 +351,56 @@ El workspace no es solo de lectura — el agente **también puede crear y modifi
 
 ---
 
-**📔 Ejemplo — lista de la compra:**
-```
-Usuario: Añade leche a mi lista de la compra
+## 🧪 Ejercicio — Resumen de documentos
 
-→ El agente actualiza workspace/lista_compra.md:
-  - [x] Pan
-  - [ ] Leche   ← añadido ahora
-  - [ ] Huevos
+**Objetivo:** Que el agente lea documentos de alumnos desde el workspace, genere un resumen por alumno y cree un informe consolidado con citas guardado en disco.
+
+**Cómo funciona:**
+- Los documentos están en `workspace/alumnos/` (uno por alumno)
+- El agente los lee al arrancar la conversación
+- Genera resúmenes individuales y un informe final con citas
+
+---
+
+**Pasos:**
+1. Copia los ficheros de alumnos en `workspace/alumnos/` (ya están en `session01/data/`)
+2. Actualiza `SOUL.md` para indicar al agente que es un evaluador académico
+3. Pide: *"Haz un resumen del trabajo de cada alumno"*
+4. Pide: *"Genera un informe consolidado con citas y guárdalo en workspace/informe_final.md"*
+5. Abre `workspace/informe_final.md` y verifica el resultado
+
+---
+
+## 🧪 Ejercicio — Resumen de documentos (cont.)
+
+**Ejemplo de `SOUL.md`:**
+```markdown
+Eres un evaluador académico. Tienes acceso a los trabajos de los
+alumnos en workspace/alumnos/. Al resumir, sé objetivo y conciso.
+Usa el formato: ## Alumno X · [título del trabajo]
+Cuando generes el informe final, incluye citas textuales entre
+comillas y guárdalo en workspace/informe_final.md.
 ```
 
-> 💡 **El workspace es la "memoria en disco" del agente — lee al arrancar, escribe cuando necesita recordar.**
+---
+
+**Ejemplo de conversación:**
+```
+Tú:     Resume el trabajo de cada alumno
+
+Agente: ## Alumno 01 · Redes Neuronales
+        Analiza arquitecturas CNN aplicadas a visión...
+
+        ## Alumno 02 · NLP con Transformers
+        Compara BERT y GPT en tareas de clasificación...
+
+Tú:     Genera el informe consolidado y guárdalo
+
+Agente: ✅ Informe guardado en workspace/informe_final.md
+        Incluye resúmenes y citas de 5 trabajos.
+```
+
+> 💡 Comprueba que `workspace/informe_final.md` existe y contiene las citas correctas.
 
 ---
 
@@ -219,28 +432,109 @@ OpenClaw usa archivos Markdown en el directorio `workspace/` para definir el com
 
 https://docs.openclaw.ai/reference/templates/AGENTS
 
-**Ejemplo:**
-```markdown
-# Agentes disponibles
+* Instrucciones de funcionamiento para el agente y cómo debe usar la memoria.
+* Se carga al inicio de cada sesión.
+* Buen lugar para reglas, prioridades y detalles de “cómo comportarse”
 
-## Recepcionista
-- Modelo: GPT-4
-- Canales: Telegram, Web
-- Rol: Atención al cliente
+<!-- Cada agente, dispone de su fichero propio. -->
 
-## Asistente Técnico  
-- Modelo: Claude-3
-- Canales: Slack, Email
-- Rol: Soporte técnico
+---
+AGENTD.md
+```
+# AGENTS.md - Your Workspace
+
+This folder is home. Treat it that way.
+
+## First Run
+
+If `BOOTSTRAP.md` exists, that's your birth certificate. Follow it, figure out who you are, then delete it. You won't need it again.
+
+## Session Startup
+
+Before doing anything else:
+
+1. Read `SOUL.md` — this is who you are
+2. Read `USER.md` — this is who you're helping
+3. Read `memory/YYYY-MM-DD.md` (today + yesterday) for recent context
+4. **If in MAIN SESSION** (direct chat with your human): Also read `MEMORY.md`
+
+Don't ask permission. Just do it.
+
+```
+---
+AGENTD.md (cont)
+```
+## Memory
+
+You wake up fresh each session. These files are your continuity:
+
+- **Daily notes:** `memory/YYYY-MM-DD.md` (create `memory/` if needed) — raw logs of what happened
+- **Long-term:** `MEMORY.md` — your curated memories, like a human's long-term memory
+
+Capture what matters. Decisions, context, things to remember. Skip the secrets unless asked to keep them.
+
+```
+---
+AGENTD.md (cont)
+```
+### 🧠 MEMORY.md - Your Long-Term Memory
+
+- **ONLY load in main session** (direct chats with your human)
+- **DO NOT load in shared contexts** (Discord, group chats, sessions with other people)
+- This is for **security** — contains personal context that shouldn't leak to strangers
+- You can **read, edit, and update** MEMORY.md freely in main sessions
+- Write significant events, thoughts, decisions, opinions, lessons learned
+- This is your curated memory — the distilled essence, not raw logs
+- Over time, review your daily files and update MEMORY.md with what's worth keeping
+
+```
+---
+AGENTD.md (cont)
+```
+### 📝 Write It Down - No "Mental Notes"!
+
+- **Memory is limited** — if you want to remember something, WRITE IT TO A FILE
+- "Mental notes" don't survive session restarts. Files do.
+- When someone says "remember this" → update `memory/YYYY-MM-DD.md` or relevant file
+- When you learn a lesson → update AGENTS.md, TOOLS.md, or the relevant skill
+- When you make a mistake → document it so future-you doesn't repeat it
+- **Text > Brain** 
+```
+---
+AGENTD.md (cont)
+```
+## Red Lines
+
+- Don't exfiltrate private data. Ever.
+- Don't run destructive commands without asking.
+- `trash` > `rm` (recoverable beats gone forever)
+- When in doubt, ask.
+
+```
+---
+AGENTD.md (cont)
 ```
 
-<!-- **Papel:** Permite tener múltiples agentes especializados en un solo sistema. -->
+## External vs Internal
 
+**Safe to do freely:**
+
+- Read files, explore, organize, learn
+- Search the web, check calendars
+- Work within this workspace
+
+**Ask first:**
+
+- Sending emails, tweets, public posts
+- Anything that leaves the machine
+- Anything you're uncertain about
+
+```
 ---
 
 ## IDENTITY.md — La personalidad del agente
 
-**Propósito:** Define quién es el agente y cómo se comporta.
+**Propósito:** Define quién es el agente (nombre, vibe, emoji) 
 
 https://docs.openclaw.ai/reference/templates/IDENTITY
 
@@ -263,6 +557,8 @@ https://docs.openclaw.ai/reference/templates/IDENTITY
 
 **Propósito:** Contiene el System Prompt que guía todas las respuestas.
 
+Define la persona, el tono y los límites
+
 https://docs.openclaw.ai/reference/templates/SOUL
 
 **Ejemplo:**
@@ -275,6 +571,45 @@ Si preguntan precios, deriva a ventas.
 ```
 
 **Papel:** Define la "alma" — qué sabe y cómo responde el agente.
+
+Guía de personalidad: https://docs.openclaw.ai/concepts/soul
+
+--- 
+
+## Ejercicio: Jugando con la pesonalidad del agente
+
+Cambia la configuración del fichero SOUL.md para reflejar estas 2 personalidades:
+* Eres un experto desarrollador de software, con altos conocimientos de IA. No tengas problemas en explicar conceptos de arquitectura de software utilizando términos complejos.
+* Eres un profesor de informática de instituto. Cualquier concepto complejo de informática, deberás explicarlo con metáforas y adaptado a gente sin muchos conocimientos técnicos.
+
+**Probar a pedirle en ambos casos que te de información sobre los LLMS**
+
+---
+
+## Ejercicio: Canal-aware soul
+
+Modificar `SOUL.md` para que el agente adapte su comportamiento según el canal desde el que se le habla.
+
+Edita tu `SOUL.md` e incluye instrucciones distintas para cada canal:
+
+```markdown
+## Comportamiento por canal
+
+- Si el usuario escribe desde **Telegram**: responde de forma
+  concisa, usa emojis y limita las respuestas a 2-3 frases.
+- Si el usuario escribe desde **Discord**: puedes ser más
+  detallado, usa bloques de código y listas cuando sea útil.
+```
+
+Luego prueba enviando el mismo mensaje desde ambos canales y observa la diferencia.
+
+---
+
+## Preguntas para reflexionar
+
+- ¿Respeta el agente las instrucciones del canal de forma consistente?
+- ¿Qué pasa si no especificas el canal en el `SOUL.md`?
+- ¿Podrías hacer lo mismo para distinguir usuarios o roles?
 
 ---
 ## TOOLS.md — Las habilidades del agente
@@ -340,22 +675,12 @@ Si preguntan precios, deriva a ventas.
 
 ---
 
-**📔 Ejemplo — nuevo agente:**
-
-Vamos a crear un nuevo agente, con características especiales.
-
-- Creación del agente por línea de comandos
-- Veremos BOOTSTRAP.md
-- Le daremos identidad y alma
-- Uso.
-
----
-
 # Skills
 
 ---
 
 # Bloque 1
+
 ## 🏗️ Arquitectura de una Skill
 
 *¿Cómo decide el agente cuándo usar una herramienta?*
@@ -414,28 +739,40 @@ Usuario: "¿Cómo está el tiempo en Zaragoza?"
 │  la respuesta       │   y está nublado. ¡Lleva paraguas!"
 └─────────────────────┘
 ```
+---
+
+AQUI NOS QUEDAMOS
+
+<!-- 
+Prueba:
+- Pedimos info
+- Analizamos el tool output
+- Deshabilitamos la tool de websearch
+- Volvemos a pedir (ojo tiene memoria!!)
+- Nueva sesión
+- Si tiene tools de exec, las utiliza y si no, las de session...
+
+
+
+-->
+
 
 ---
 
 ## Anatomía de una Skill en OpenClaw
 
-```python
-from openclaw import skill
+workspace/skills/my_skill/SKILL.md
 
-@skill(
-    name="get_weather",
-    description="Consulta el tiempo actual de una ciudad.",
-    parameters={
-        "city": {
-            "type": "string",
-            "description": "Nombre de la ciudad (ej: Madrid, Zaragoza)"
-        }
-    }
-)
-def get_weather(city: str) -> dict:
-    # Aquí va el código real
-    response = requests.get(f"https://api.weather.com/?q={city}")
-    return response.json()
+```
+---
+name: hello_world
+description: A simple skill that says hello.
+---
+
+# Hello World Skill
+
+When the user asks for a greeting, use the `echo` tool to say
+"Hello from your custom skill!".
 ```
 
 **La `description` es crítica**: el LLM la lee para decidir si usar esta Skill.
@@ -448,10 +785,27 @@ def get_weather(city: str) -> dict:
 |----------|---------------|---------|
 | `name` | Identificar la skill | `get_weather` |
 | `description` | Decidir *cuándo* usarla | `"Consulta el tiempo actual..."` |
-| `parameters` | Saber *qué datos* pedir al usuario | `city: string` |
+| `metadata` | Datos extra (herramientas, parámetros) | `...` |
 
 > ✍️ **Escribe la `description` como si fuera para un humano.**
 > El LLM no infiere: necesita instrucciones claras.
+
+
+--- 
+## Metadatos
+
+Opciones adicionales de nuestra skill
+
+```
+metadata:
+  {
+    "openclaw":
+      {
+        "requires": { "bins": ["uv"], "env": ["GEMINI_API_KEY"], "config": ["browser.enabled"] },
+        "primaryEnv": "GEMINI_API_KEY",
+      },
+  }
+```
 
 ---
 
@@ -469,107 +823,50 @@ El LLM hace **Function Calling** cuando:
 "Cuéntame un chiste"               → ❌ no llama a ninguna Skill
 ```
 
+--- 
+## Nuestra primera skill
+
+```
+---
+name: lista_compra
+description: Skill para gestionar la lista de la compra del usuario
 ---
 
-## Registrar Skills en agent.yaml
+# Lista de la compra Skill
+
+Gestionas la lista de la compra en un fichero lista_compra.md. Si no existe deberás crearlo.
+
+Si el usuario pregunta por los elementos de la lista, lee el fichero y muestralo.
+
+Cada vez que el usuario añada un elemento, añadirás el elemento como una lista de elementos check (- [ ]  elemento).
+
+Si el usuario te dice que ha comprado un elemento de la lista, deberás marcarlo como hecho (- [x] elemento).
+
+Si el usuario te dice que borres un elemento de la lista, elimina esa línea.
+```
+
+---
+
+## Revisar si está instalado
 
 ```yaml
-# agent.yaml
-name: recepcionista
-llm:
-  provider: openai
-  model: gpt-4o-mini
+openclaw skills list
 
-skills:
-  - path: skills/get_weather.py
-  - path: skills/register_lead.py
+│               │                       │ normal user chats).                                                                                      │                    │
+│ ✓ ready       │ ☔ weather            │ Get current weather and forecasts via wttr.in or Open-Meteo. Use when: user asks about weather,          │ openclaw-bundled   │
+│               │                       │ temperature, or forecasts for any location. NOT for: historical weather data, severe weather alerts, or  │                    │
+│               │                       │ detailed meteorological analysis. No API key needed.                                                     │                    │
+│ △ needs setup │ 🐦 xurl               │ A CLI tool for making authenticated requests to the X (Twitter) API. Use this skill when you need to     │ openclaw-bundled   │
+│               │                       │ post tweets, reply, quote, search, read posts, manage followers, send DMs, upload media, or interact     │                    │
+│               │                       │ with any X API v2 endpoint.                                                                              │                    │
+│ ✓ ready       │ 📦 lista_compra       │ Skill para gestionar la lista de la compra del usuario                                                   │ openclaw-workspace │
+│ ⏸ disabled   │ 📦 priceforagent      │ Get real-time prices for crypto, stocks, and commodities. Use when the user asks about asset prices,     │ openclaw-workspace │
+│               │                       │ market data, or needs to check the value of Bitcoin, Ethereum, stocks like NVDA/AAPL, or commodities     │                    │
+│               │                       │ like gold/silver. Supports natural language queries ("What's the price of Bitcoin?") and direct lookups. │                    │
+└───────────────┴───────────────────────┴──────────────────────────────────────────────────────────────────────────────────────────────────────────┴────────────────────┘
 
-system_prompt: |
-  Eres el asistente de TechCorp.
-  Cuando alguien pregunte por el tiempo, usa la herramienta disponible.
-  Cuando alguien muestre interés en comprar, registra sus datos.
+Tip: use `openclaw skills search`, `openclaw skills install`, and `openclaw skills update` for ClawHub-backed skills.
 ```
-
----
-
-# Bloque 2
-## 🌐 Skill de Lectura — API externa
-
-*El agente aprende a consultar datos en tiempo real*
-
----
-
-## Objetivo del bloque
-
-Crear una Skill que consulte una **API pública gratuita** y permita al agente:
-
-- Responder con datos actualizados al segundo
-- No alucinar información que no conoce
-
-**Dos opciones de práctica:**
-- 🌤️ Clima de una ciudad (OpenWeatherMap — gratis)
-- ₿ Precio actual del Bitcoin (CoinGecko — sin API key)
-
----
-
-## Skill: Precio de Bitcoin
-
-```python
-# skills/get_bitcoin_price.py
-import requests
-from openclaw import skill
-
-@skill(
-    name="get_bitcoin_price",
-    description=(
-        "Obtiene el precio actual del Bitcoin en tiempo real. "
-        "Úsala cuando el usuario pregunte por el precio, valor o "
-        "cotización del Bitcoin o BTC."
-    ),
-    parameters={}   # No necesita parámetros
-)
-def get_bitcoin_price() -> dict:
-    url = "https://api.coingecko.com/api/v3/simple/price"
-    params = {"ids": "bitcoin", "vs_currencies": "usd,eur"}
-    resp = requests.get(url, params=params, timeout=5)
-    data = resp.json()["bitcoin"]
-    return {
-        "usd": data["usd"],
-        "eur": data["eur"]
-    }
-```
-
----
-
-## Skill: Clima de una ciudad
-
-```python
-# skills/get_weather.py
-import requests, os
-from openclaw import skill
-
-@skill(
-    name="get_weather",
-    description=(
-        "Consulta el tiempo meteorológico actual de cualquier ciudad. "
-        "Úsala cuando el usuario pregunte por la temperatura, el clima "
-        "o el tiempo que hace en un lugar."
-    ),
-    parameters={
-        "city": {
-            "type": "string",
-            "description": "Ciudad sobre la que consultar el tiempo"
-        }
-    }
-)
-def get_weather(city: str) -> dict:
-    key = os.getenv("OPENWEATHER_API_KEY")
-    url = "https://api.openweathermap.org/data/2.5/weather"
-    resp = requests.get(url, params={"q": city, "appid": key, "units": "metric", "lang": "es"})
-    data = resp.json()
-    return {"city": city, "temp": data["main"]["temp"], "desc": data["weather"][0]["description"]}
-```
-
 ---
 
 ## El poder de una buena `description`
@@ -594,60 +891,6 @@ Comparación entre descripciones ❌ malas y ✅ buenas:
 
 > La descripción responde a: **¿cuándo** debe el LLM usar esta Skill?
 
----
-
-## Probando en Telegram
-
-```
-Usuario: ¿Cuánto vale el Bitcoin ahora?
-
-Bot: ¡Claro! Déjame consultarlo...
-     El precio actual del Bitcoin es:
-     • 💵 $67,420 USD
-     • 💶 €62,100 EUR
-     (Dato en tiempo real, actualizado hace segundos)
-
-Usuario: ¿Y qué tiempo hace en Zaragoza?
-
-Bot: En Zaragoza ahora mismo hay 14°C
-     con cielo parcialmente nublado. 🌤️
-```
-
----
-
-## Manejo de errores en Skills
-
-Siempre contempla fallos de red o API:
-
-```python
-@skill(name="get_bitcoin_price", description="...", parameters={})
-def get_bitcoin_price() -> dict:
-    try:
-        resp = requests.get("https://api.coingecko.com/...", timeout=5)
-        resp.raise_for_status()
-        return resp.json()["bitcoin"]
-    except requests.Timeout:
-        return {"error": "La API tardó demasiado. Inténtalo de nuevo."}
-    except requests.HTTPError as e:
-        return {"error": f"Error de la API: {e}"}
-```
-
-> El LLM leerá el `error` y lo comunicará al usuario de forma natural.
-
----
-
-## 🧪 Ejercicio 2A — Skill de Lectura
-
-1. Crea `skills/get_bitcoin_price.py` en tu proyecto
-2. Regístrala en `agent.yaml`
-3. Inicia el bot y en Telegram pregunta: *"¿Cuánto vale el Bitcoin?"*
-4. Verifica que el dato es real (compáralo con Google)
-
-**Bonus:** Añade soporte para Ethereum. ¿Qué cambias en el código?
-
----
-
-# Bloque 3
 ## 📝 Skill de Escritura — Acción corporativa
 
 *El agente que capta y registra leads de forma autónoma*
@@ -700,38 +943,6 @@ Mensaje: "Me interesa comprar, mi email es hola@test.com"
 
 ## Skill: Registrar Lead en CSV
 
-```python
-# skills/register_lead.py
-import csv, os
-from datetime import datetime
-from openclaw import skill
-
-@skill(
-    name="register_lead",
-    description=(
-        "Registra un cliente potencial (lead) en la base de datos. "
-        "Úsala cuando el usuario muestre interés en comprar, pida "
-        "información comercial o deje sus datos de contacto."
-    ),
-    parameters={
-        "nombre":  {"type": "string", "description": "Nombre del contacto"},
-        "email":   {"type": "string", "description": "Email del contacto"},
-        "interes": {"type": "string", "description": "Producto o servicio de interés"}
-    }
-)
-def register_lead(nombre: str, email: str, interes: str) -> dict:
-    filepath = "data/leads.csv"
-    os.makedirs("data", exist_ok=True)
-    is_new = not os.path.exists(filepath)
-    with open(filepath, "a", newline="") as f:
-        writer = csv.DictWriter(f, fieldnames=["fecha","nombre","email","interes"])
-        if is_new:
-            writer.writeheader()
-        writer.writerow({"fecha": datetime.now().isoformat(), "nombre": nombre,
-                         "email": email, "interes": interes})
-    return {"status": "ok", "message": f"Lead de {nombre} registrado correctamente."}
-```
-
 ---
 
 ## El System Prompt define el comportamiento
@@ -746,98 +957,11 @@ system_prompt: |
   Cuando alguien muestre interés en los productos:
   1. Pregunta su nombre si no lo has indicado.
   2. Pregunta su email de contacto.
-  3. Usa la herramienta 'register_lead' para guardar sus datos.
+  3. Usa la skill 'register_lead' para guardar sus datos.
   4. Confirma al usuario que el equipo comercial le contactará.
 
   Nunca inventes precios ni hagas promesas específicas de descuentos.
 ```
-
----
-
-## Conversación completa en Telegram
-
-```
-Usuario: Buenas, ¿tenéis alguna solución para gestión de inventario?
-
-Bot: ¡Hola! Sí, TechCorp tiene una solución específica para gestión
-     de inventario con integración en tiempo real. ¿Te gustaría que
-     nuestro equipo comercial te enviara más información?
-
-Usuario: Sí, me interesa. Soy Marcos.
-
-Bot: ¡Perfecto, Marcos! ¿Cuál es tu email de contacto para que el
-     equipo pueda escribirte?
-
-Usuario: marcos@miempresa.com
-
-Bot: ¡Listo! He registrado tus datos. 📋
-     El equipo de TechCorp se pondrá en contacto contigo pronto.
-     ¿Hay algo más en lo que pueda ayudarte?
-```
-
----
-
-## Verificar los datos guardados
-
-```bash
-# Ver los leads registrados
-cat data/leads.csv
-```
-
-```csv
-fecha,nombre,email,interes
-2026-03-18T10:23:41,Marcos,marcos@miempresa.com,gestión de inventario
-2026-03-18T11:05:12,Laura,laura@empresa.es,software de gestión
-```
-
-> En producción, esto se puede reemplazar por Google Sheets, Airtable,
-> un CRM como HubSpot, o directamente una base de datos.
-
----
-
-## Variante: Guardar en Google Sheets
-
-```python
-import gspread
-from google.oauth2.service_account import Credentials
-
-@skill(name="register_lead", description="...", parameters={...})
-def register_lead(nombre: str, email: str, interes: str) -> dict:
-    creds = Credentials.from_service_account_file(
-        "credentials.json",
-        scopes=["https://spreadsheets.google.com/feeds"]
-    )
-    gc = gspread.authorize(creds)
-    sheet = gc.open("TechCorp Leads").sheet1
-    sheet.append_row([datetime.now().isoformat(), nombre, email, interes])
-    return {"status": "ok"}
-```
-
-> Solo cambia la función `register_lead`. El agente y el YAML son idénticos.
-
----
-
-## 🧪 Ejercicio 2B — Skill de Escritura
-
-1. Crea `skills/register_lead.py` con la versión CSV
-2. Regístrala en `agent.yaml` junto al System Prompt de captación
-3. Simula en Telegram ser un cliente interesado en un producto
-4. Verifica que `data/leads.csv` contiene tus datos
-
-**Bonus:** ¿Qué pasa si no das el email? ¿El bot lo pide?
-Prueba a decirle solo tu nombre y observa el comportamiento.
-
----
-
-## Skills: buenas prácticas
-
-| ✅ Hacer | ❌ Evitar |
-|----------|-----------|
-| Descripciones claras y específicas | Nombres genéricos (`tool1`, `doStuff`) |
-| Retornar `dict` con `status` y datos | Lanzar excepciones sin capturar |
-| Tipar bien los parámetros | Parámetros ambiguos o sin descripción |
-| Una Skill = una responsabilidad | Skills que hacen demasiadas cosas |
-| Confirmar la acción al usuario | Actuar en silencio sin feedback |
 
 ---
 

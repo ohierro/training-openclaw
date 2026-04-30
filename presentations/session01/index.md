@@ -19,7 +19,7 @@ paginate: true
 |    | Descanso | 20 min |
 | 💻 2 | Hola Mundo en Consola | 40 min |
 |    | Descanso | 20 min |
-| 📱 3 | Despliegue en Discord | 30 min |
+| 📱 3 | Acceso al panel web y TUI | 30 min |
 | 🖊️ 4 | Ejemplos prácticos | 15 min |
 | ❔  | Preguntas | 15 min |
 
@@ -417,11 +417,58 @@ Crear el fichero `.env` en la raíz del proyecto
 
 ---
 
-## Go live!
+## Instalación en windows 
+
+Instalar subsistema wsl
+
+```
+# Install OpenClaw
+# iwr -useb https://openclaw.ai/install.ps1 | iex
+
+# Install daemon
+# openclaw onboard --install-daemon
+
+# Execution policy (powershell)
+# Set-ExecutionPolicy -Scope CurrentUser Unrestricted
+
+wsl --update
+wsl --install Ubuntu
+
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+nvm install 24
+
+npm install -g openclaw@2026.4.12
+
+openclaw onboard --install-daemon
+  *  configurar modelo (deepseek)
+  *  configurar canal
+
+Estado de openclaw: openclaw status
+Instalación: openclaw onboard --install-daemon
+Reinicio del gateway: openclaw gateway restart
+Configuración: openclaw configure
+
+Instalar brew?
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+
+```
+
+---
+
+Acceso a webUI
+```
+    "controlUi": {
+      "allowInsecureAuth": true,
+      "allowedOrigins": ["*"],
+      "dangerouslyDisableDeviceAuth": true,
+    },
+```
+
 
 ---
 
 # Primeros pasos
+
 
 ## Acceso básico
 
@@ -584,62 +631,13 @@ Esto es posible porque cada mensaje incluye el historial previo al LLM:
 [user]   ¿Recuerdas cómo me llamo?   ← el LLM "ve" todo lo anterior
 ```
 
-
----
-
-# 📢 Nuestro segundo canal: Discord 
-
----
-
-## Paso 1: Crear la aplicación en Discord Developer Portal
-
-1. Ve a [discord.com/developers/applications](https://discord.com/developers/applications)
-2. Clic en **New Application** → ponle un nombre (ej: `TechCorp Bot`)
-3. Ve a la sección **Bot** → clic en **Add Bot**
-4. En **Token**, clic en **Reset Token** y cópialo
-
--- 
-
-## Paso 2: Paso 2: Obtener el Guild ID (servidor)
-1. Activa el **Modo Desarrollador** en Discord (Ajustes → Avanzado)
-2. Click derecho sobre tu servidor → **Copiar ID del servidor**
-
----
-
-## Paso 3: Configurar OpenClaw
-
-En `.env`:
-```bash
-DISCORD_BOT_TOKEN=tu_token_aquí
-DISCORD_GUILD_ID=tu_guild_id_aquí
-```
-
-A partir de aquí, utilizamos `openclaw configure`
-
-
----
-
-## Paso 4: Invitar el bot al servidor
-1. En el portal, ve a **OAuth2 → URL Generator**
-2. Scopes: `bot` · Permissions: `Send Messages`, `Read Message History`
-3. Copia la URL generada y ábrela para invitar el bot
-
----
-
-## Paso 5: Arrancar y probar
-- Inicia OpenClaw y escribe en el canal del servidor
-- Comparte el servidor con un compañero para que lo pruebe
-
-**Bonus:** Cambia `SOUL.md` para que el bot se presente con tu empresa ficticia.
-
-
 ---
 
 # Ejercicios adicionales
 
 ---
 
-## 🧪 Ejercicio 3 — La lista de la compra
+## 🧪 Ejercicio 1 — La lista de la compra
 
 **Objetivo:** Que el agente gestione una lista de la compra persistente, modificable desde cualquier canal.
 
@@ -655,11 +653,13 @@ A partir de aquí, utilizamos `openclaw configure`
 2. Dile: *"Añade leche, pan y huevos a la lista"*
 3. Dile: *"Ya compré el pan, márcalo"*
 4. Dile: *"¿Qué me falta comprar?"*
-5. Prueba desde **Discord** y comprueba que la lista persiste entre canales
+5. Prueba desde **Web** y comprueba que la lista persiste entre canales
+
+> 💡 Abre `workspace/lista_compra.md` y verifica que el fichero se ha actualizado.
 
 ---
 
-## 🧪 Ejercicio 3 — La lista de la compra (cont.)
+## 🧪 Ejercicio 2 — La lista de la compra (cont.)
 
 **Ejemplo de `SOUL.md`:**
 ```markdown
@@ -683,145 +683,6 @@ Tú:     ¿Qué me falta?
 Agente: 🛒 Pendiente: leche, pan
 ```
 
-> 💡 Abre `workspace/lista_compra.md` y verifica que el fichero se ha actualizado.
-
----
-
-## 🧪 Ejercicio 4 — Resumen de documentos
-
-**Objetivo:** Que el agente lea documentos de alumnos desde el workspace, genere un resumen por alumno y cree un informe consolidado con citas guardado en disco.
-
-**Cómo funciona:**
-- Los documentos están en `workspace/alumnos/` (uno por alumno)
-- El agente los lee al arrancar la conversación
-- Genera resúmenes individuales y un informe final con citas
-
----
-
-**Pasos:**
-1. Copia los ficheros de alumnos en `workspace/alumnos/` (ya están en `session01/data/`)
-2. Actualiza `SOUL.md` para indicar al agente que es un evaluador académico
-3. Pide: *"Haz un resumen del trabajo de cada alumno"*
-4. Pide: *"Genera un informe consolidado con citas y guárdalo en workspace/informe_final.md"*
-5. Abre `workspace/informe_final.md` y verifica el resultado
-
----
-
-## 🧪 Ejercicio 4 — Resumen de documentos (cont.)
-
-**Ejemplo de `SOUL.md`:**
-```markdown
-Eres un evaluador académico. Tienes acceso a los trabajos de los
-alumnos en workspace/alumnos/. Al resumir, sé objetivo y conciso.
-Usa el formato: ## Alumno X · [título del trabajo]
-Cuando generes el informe final, incluye citas textuales entre
-comillas y guárdalo en workspace/informe_final.md.
-```
-
----
-
-**Ejemplo de conversación:**
-```
-Tú:     Resume el trabajo de cada alumno
-
-Agente: ## Alumno 01 · Redes Neuronales
-        Analiza arquitecturas CNN aplicadas a visión...
-
-        ## Alumno 02 · NLP con Transformers
-        Compara BERT y GPT en tareas de clasificación...
-
-Tú:     Genera el informe consolidado y guárdalo
-
-Agente: ✅ Informe guardado en workspace/informe_final.md
-        Incluye resúmenes y citas de 5 trabajos.
-```
-
-> 💡 Comprueba que `workspace/informe_final.md` existe y contiene las citas correctas.
-
----
-
-## 🧪 Ejercicio 5 — Resumen de noticias por cron
-
-**Objetivo:** Programar una tarea diaria que busque noticias en `marca.es`, las resuma y las envíe automáticamente por **Discord**.
-
-**Cómo funciona:**
-- Se registra un **cron job** con `openclaw cron add` apuntando al canal Discord
-- El agente visita `marca.es`, extrae los titulares y genera un resumen
-- Lo envía **directamente a Discord** sin intervención manual
-
----
-
-## ⏰ Cron vs Heartbeat
-
-📖 [docs.openclaw.ai/automation/cron-vs-heartbeat](https://docs.openclaw.ai/automation/cron-vs-heartbeat)
-
-| | **Heartbeat** | **Cron (isolated)** |
-|--|:--:|:--:|
-| Timing | Cada N minutos (aprox.) | Expresión cron exacta |
-| Contexto | Sesión principal (memoria) | Sesión limpia por ejecución |
-| Uso ideal | Monitoreo, inbox, calendario | Informes diarios, tareas precisas |
-| Coste | Menor (una llamada batcheada) | Una llamada por job |
-| Historial | Compartido con el agente | No contamina la sesión principal |
-| Entrega | Solo si hay algo importante | `--announce` → directo al canal |
-
----
-
-**¿Cuándo usar cada uno?**
-
-- 🫀 **Heartbeat** → *"Vigila mi email cada 30 min y avísame si hay algo urgente"*
-- ⏰ **Cron** → *"Mándame el resumen de noticias todos los días a las 8:00"*
-
-> 💡 Lo más eficiente es **combinar ambos**: heartbeat para monitoreo continuo + cron para tareas puntuales con horario fijo.
-
----
-
-**Pasos:**
-1. Asegúrate de que el canal Discord está activo y configurado
-2. Registra el cron desde la **TUI o terminal** con `openclaw cron add`
-3. Edita `SOUL.md` para que el agente sepa resumir noticias deportivas
-4. **Verifica en la web** (`openclaw web`) que el job aparece activo en el panel de cron
-5. Espera la primera ejecución (o fuerza una manual) y comprueba el mensaje en Discord
-
----
-
-## 🧪 Ejercicio 5 — Resumen de noticias (cont.)
-
-**Registrar el cron job:**
-```bash
-openclaw cron add \
-  --name "Resumen deportivo" \
-  --cron "0 8 * * *" \
-  --tz "Europe/Madrid" \
-  --session isolated \
-  --message "Busca los 5 titulares más importantes de https://www.marca.es hoy. Incluye titular, párrafo de contexto y enlace. Formato: 🗞️ **Resumen deportivo — [fecha]**" \
-  --announce \
-  --channel discord
-```
-
----
-
-**Verificación en el panel web:**
-
-```
-openclaw web   →   Sección "Cron Jobs"
-┌──────────────────────────────────────────────────────┐
-│ ✅ Resumen deportivo   │ 0 8 * * *  │ discord  │ ▶ Run │
-└──────────────────────────────────────────────────────┘
-```
-
-**Ejemplo de mensaje recibido en Discord:**
-```
-🗞️ Resumen deportivo — 25 mar 2026
-
-1️⃣ Real Madrid golea al Barça en el Clásico (3-0)
-   🔗 marca.es/futbol/primera-division/...
-2️⃣ Alcaraz confirma su presencia en Roland Garros
-   🔗 marca.es/tenis/...
-...
-```
-
-> 💡 Cambia la URL por cualquier otra fuente y ajusta `--tz` a tu zona horaria.
-
 ---
 
 ## Resumen de la sesión
@@ -833,8 +694,6 @@ openclaw web   →   Sección "Cron Jobs"
 ✅ Creamos un System Prompt efectivo con identidad y restricciones
 
 ✅ El agente mantiene memoria de la conversación
-
-✅ El bot está desplegado y funcional en Telegram
 
 ---
 

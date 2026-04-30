@@ -9,6 +9,7 @@
     "build:watch": "npm run copy:assets && marp --input-dir . --output dist --html --watch",
     "live:01": "npm run build:watch & live-server dist --port=8080 --wait=300 --open=/session01",
     "live:02": "npm run build:watch & live-server dist --port=8080 --wait=300 --open=/session02",
+    "pdf:01": "marp session01/index.md --allow-local-files -o session01.pdf",
     "livepreview": "npm run build:watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },

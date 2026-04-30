@@ -230,3 +230,51 @@ channels:
 ## 🧪 Ejercicio 2 — Bot en Discord
 
 > *En pairing — un alumno comparte pantalla*
+
+
+---
+
+Instalación en windows con wsl1:
+```
+dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
+
+dism.exe /online /enable-feature /featurename:VirtualMachinePlatform /all /norestart
+
+wsl --set-default-version 1
+
+wsl --install
+
+curl -fsSL https://openclaw.ai/install.sh | bash
+
+Install node
+curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+salir
+
+nvm install 24
+
+
+Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
+
+>npm install -g openclaw@2026.4.12
+>openclaw onboard --install-daemon 
+```
+
+
+
+```
+# Install OpenClaw
+iwr -useb https://openclaw.ai/install.ps1 | iex
+
+# Install daemon
+openclaw onboard --install-daemon
+
+Configuración > Sistema > Para programadores y activa el interruptor "Habilitar sudo". 
+
+# Execution policy (powershell)
+Set-ExecutionPolicy -Scope CurrentUser Unrestricted
+
+>npm install -g openclaw@2026.4.12
+>openclaw onboard --install-daemon 
+```
+

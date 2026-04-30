@@ -27,7 +27,9 @@ El agente ya sabe hablar, pero ahora necesita poder ejecutar acciones. Introduci
 
 Las Skills sirven para acciones puntuales, pero ¿qué pasa cuando el agente necesita leer toda la base de datos de productos o manuales internos de la empresa de forma segura? Aquí entra MCP.
 
-🎯 Objetivo: Entender y desplegar el estándar MCP para dar contexto seguro y en tiempo real a OpenClaw sin tener que inyectar todo en el prompt inicial.
+Veremos también cómo planificar tareas de forma periódica con el uso de cron.
+
+🎯 Objetivo: Entender y desplegar el estándar MCP para dar contexto seguro y en tiempo real a OpenClaw sin tener que inyectar todo en el prompt inicial. Utilizar las apis de búsqueda web.
 
 📝 Ejemplo Práctico: Conectar el agente a un Servidor MCP local que contiene el inventario de la empresa (SQLite) y las políticas de devolución (archivos PDF/Markdown).
 
@@ -37,6 +39,6 @@ Las Skills sirven para acciones puntuales, pero ¿qué pasa cuando el agente nec
 
 Un solo agente generalista se vuelve torpe si le pedimos demasiado. Es hora de crear especialistas que colaboren entre sí.
 
-🎯 Objetivo: Dominar los patrones de enrutamiento (routing) y paso de mensajes entre múltiples agentes de OpenClaw.
+🎯 Objetivo: Dominar los patrones de enrutamiento (routing) y paso de mensajes entre múltiples agentes de OpenClaw. Entender y comprender el uso de las tareas programadas.
 
 📝 Ejemplo Práctico: Sustituir el agente único por un sistema de "Triage" (Clasificación) y resolución.
