@@ -415,83 +415,76 @@ Crear el fichero `.env` en la raíz del proyecto
 
 > 💡 **Nunca subas el `.env` a Git.** Está en el `.gitignore` por defecto.
 
+
 ---
 
-## Instalación en windows 
+## Instalación en AWS
 
-Instalar subsistema wsl
+Acceder al laboratorio:
+https://awsacademy.instructure.com/courses/155428?invitation=2RbOs1imHRlnrsA1Rvj1PXNNEiMVFfAVW1UYUFtV
+
+---
+## Instalación en AWS
+
+Seleccionamos Contenidos
+
+![alt text](img/install/step01.png)
+
+--- 
+
+## Instalación en AWS
+
+Laboratorio para el alumnado
+
+![alt text](img/install/step02.png)
+
+---
+## Instalación en AWS
+
+Laboratorio para el alumnado
+
+![bg](img/install/step03.png)
+
+1. El estado del laboratorio (rojo=apagado, verde=en marcha)
+2. Coste pendiente
+3. Arrancar el laboratorio (inicia todo el proceso)
+4. Detiene el laboratorio (y las máquinas)
+
+---
+
+## Instalación en linux 
 
 ```
-# Install OpenClaw
-# iwr -useb https://openclaw.ai/install.ps1 | iex
 
-# Install daemon
-# openclaw onboard --install-daemon
+apt update
 
-# Execution policy (powershell)
-# Set-ExecutionPolicy -Scope CurrentUser Unrestricted
-
-wsl --update
-wsl --install Ubuntu
-
+# Instalamos NVM
 curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.4/install.sh | bash
+
+# Instalamos Node
 nvm install 24
 
+# Instalamos openclaw
 npm install -g openclaw@2026.4.12
 
+# Instalamos openclaw
 openclaw onboard --install-daemon
   *  configurar modelo (deepseek)
   *  configurar canal
+```
+---
 
+Comandos habituales:
+
+```
 Estado de openclaw: openclaw status
 Instalación: openclaw onboard --install-daemon
 Reinicio del gateway: openclaw gateway restart
 Configuración: openclaw configure
-
-Instalar brew?
-/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
-
 ```
-
----
-
-Acceso a webUI
-```
-    "controlUi": {
-      "allowInsecureAuth": true,
-      "allowedOrigins": ["*"],
-      "dangerouslyDisableDeviceAuth": true,
-    },
-```
-
-
 ---
 
 # Primeros pasos
-
-
-## Acceso básico
-
-* Arquitectura final (MI PC > Virtual Box > Docker > OpenClaw)
-* Acceso a los contenedores
-* Acceso a TUI (*Terminal User Interface*)
-
----
-
-## Acceso básico
-
-SSH Tunneling: https://iximiuz.com/en/posts/ssh-tunnels/
-
-![alt text](img/ssh/ssh-tunnels.png)
-
----
-## Acceso básicos
-
-Comandos habituales:
-* Lanzar comandos: `docker compose run -it openclaw-cli <COMANDO>`
-* Conectar con la máquina: `docker compose exec -it openclaw-gateway bash`
-* Configurar openclaw `openclaw configure`
-* Abrir TUI `openclaw tui`
 
 ---
 
@@ -552,7 +545,20 @@ Pantalla de presentación
 
 <!-- Peticiones pendientes: `openclaw devices approve` -->
 
+---
 
+# Configuración básica 
+
+Acceso a webUI desde el exterior
+```
+    "controlUi": {
+      "allowInsecureAuth": true,
+      "allowedOrigins": ["*"],
+      "dangerouslyDisableDeviceAuth": true,
+    },
+```
+
+---
 
 # Nuestro Primer canal  
 

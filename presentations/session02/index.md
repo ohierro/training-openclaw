@@ -741,20 +741,11 @@ Usuario: "¿Cómo está el tiempo en Zaragoza?"
 ```
 ---
 
-AQUI NOS QUEDAMOS
+## Prueba:
 
-<!-- 
-Prueba:
-- Pedimos info
-- Analizamos el tool output
-- Deshabilitamos la tool de websearch
-- Volvemos a pedir (ojo tiene memoria!!)
-- Nueva sesión
-- Si tiene tools de exec, las utiliza y si no, las de session...
-
-
-
--->
+* Deshabilita la tool websearch (ojo, tiene memoria!)
+* Nueva sesión
+* Habilitar tools exec
 
 
 ---

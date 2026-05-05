@@ -278,3 +278,40 @@ Set-ExecutionPolicy -Scope CurrentUser Unrestricted
 >openclaw onboard --install-daemon 
 ```
 
+
+```
+# Install OpenClaw
+# iwr -useb https://openclaw.ai/install.ps1 | iex
+
+# Install daemon
+# openclaw onboard --install-daemon
+
+# Execution policy (powershell)
+# Set-ExecutionPolicy -Scope CurrentUser Unrestricted
+
+wsl --update
+wsl --install Ubuntu
+```
+
+## Acceso básico
+
+* Arquitectura final (MI PC > Virtual Box > Docker > OpenClaw)
+* Acceso a los contenedores
+* Acceso a TUI (*Terminal User Interface*)
+
+---
+
+## Acceso básico
+
+SSH Tunneling: https://iximiuz.com/en/posts/ssh-tunnels/
+
+![alt text](img/ssh/ssh-tunnels.png)
+
+---
+## Acceso básicos
+
+Comandos habituales:
+* Lanzar comandos: `docker compose run -it openclaw-cli <COMANDO>`
+* Conectar con la máquina: `docker compose exec -it openclaw-gateway bash`
+* Configurar openclaw `openclaw configure`
+* Abrir TUI `openclaw tui`
